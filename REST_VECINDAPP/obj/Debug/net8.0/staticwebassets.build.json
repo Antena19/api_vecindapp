@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "mu7gWsZ55SoFs/zU5yH9Xbhw3MOKTBNVAYyIf6XP/Rw=",
+  "Source": "REST_VECINDAPP",
+  "BasePath": "_content/REST_VECINDAPP",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}
