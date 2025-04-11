@@ -1,10 +1,42 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "REST_VECINDAPP",
-    "version": "1.0"
+    "title": "VecindApp API",
+    "description": "API para la aplicación de gestión de juntas de vecinos",
+    "version": "v1"
   },
   "paths": {
+    "/api/Autenticacion/login": {
+      "post": {
+        "tags": [
+          "Autenticacion"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Socios": {
       "get": {
         "tags": [
@@ -16,13 +48,40 @@
             "in": "query",
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int32",
+              "default": -1
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Socio"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Socio"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Socio"
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -38,13 +97,40 @@
             "in": "query",
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int32",
+              "default": -1
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Usuario"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Usuario"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Usuario"
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -91,6 +177,128 @@
   },
   "components": {
     "schemas": {
+      "LoginRequest": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "nullable": true
+          },
+          "password": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Socio": {
+        "type": "object",
+        "properties": {
+          "idsocio": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "rut": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "fecha_solicitud": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "fecha_aprobacion": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "estado_solicitud": {
+            "type": "string",
+            "nullable": true
+          },
+          "motivo_rechazo": {
+            "type": "string",
+            "nullable": true
+          },
+          "documento_identidad": {
+            "type": "string",
+            "format": "byte",
+            "nullable": true
+          },
+          "documento_domicilio": {
+            "type": "string",
+            "format": "byte",
+            "nullable": true
+          },
+          "estado": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Usuario": {
+        "type": "object",
+        "properties": {
+          "rut": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "dv_rut": {
+            "type": "string",
+            "nullable": true
+          },
+          "nombre": {
+            "type": "string",
+            "nullable": true
+          },
+          "apellido_paterno": {
+            "type": "string",
+            "nullable": true
+          },
+          "apellido_materno": {
+            "type": "string",
+            "nullable": true
+          },
+          "correo_electronico": {
+            "type": "string",
+            "nullable": true
+          },
+          "telefono": {
+            "type": "string",
+            "nullable": true
+          },
+          "direccion": {
+            "type": "string",
+            "nullable": true
+          },
+          "password": {
+            "type": "string",
+            "nullable": true
+          },
+          "fecha_registro": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "estado": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "tipo_usuario": {
+            "type": "string",
+            "nullable": true
+          },
+          "token_recuperacion": {
+            "type": "string",
+            "nullable": true
+          },
+          "fecha_token_recuperacion": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "WeatherForecast": {
         "type": "object",
         "properties": {
@@ -114,6 +322,18 @@
         },
         "additionalProperties": false
       }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "description": "JWT Authorization header usando el esquema Bearer. Ingresa tu token JWT aquí.",
+        "scheme": "bearer"
+      }
     }
-  }
+  },
+  "security": [
+    {
+      "Bearer": [ ]
+    }
+  ]
 }
