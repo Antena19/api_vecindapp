@@ -3,6 +3,22 @@
   "WorkspaceRootPath": "C:\\Users\\alann\\OneDrive\\Documentos\\code\\Angie\\api_vecindapp\\REST_VECINDAPP\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{32FA51F2-0DC8-41D6-B959-3B95E045EFF0}|REST_VECINDAPP.csproj|c:\\users\\alann\\onedrive\\documentos\\code\\angie\\api_vecindapp\\rest_vecindapp\\modelos\\usuarios.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{32FA51F2-0DC8-41D6-B959-3B95E045EFF0}|REST_VECINDAPP.csproj|solutionrelative:modelos\\usuarios.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{32FA51F2-0DC8-41D6-B959-3B95E045EFF0}|REST_VECINDAPP.csproj|c:\\users\\alann\\onedrive\\documentos\\code\\angie\\api_vecindapp\\rest_vecindapp\\controllers\\usuarioscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{32FA51F2-0DC8-41D6-B959-3B95E045EFF0}|REST_VECINDAPP.csproj|solutionrelative:controllers\\usuarioscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{32FA51F2-0DC8-41D6-B959-3B95E045EFF0}|REST_VECINDAPP.csproj|c:\\users\\alann\\onedrive\\documentos\\code\\angie\\api_vecindapp\\rest_vecindapp\\capanegocios\\cn_usuarios.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{32FA51F2-0DC8-41D6-B959-3B95E045EFF0}|REST_VECINDAPP.csproj|solutionrelative:capanegocios\\cn_usuarios.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{32FA51F2-0DC8-41D6-B959-3B95E045EFF0}|REST_VECINDAPP.csproj|c:\\users\\alann\\onedrive\\documentos\\code\\angie\\api_vecindapp\\rest_vecindapp\\modelos\\socios.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{32FA51F2-0DC8-41D6-B959-3B95E045EFF0}|REST_VECINDAPP.csproj|solutionrelative:modelos\\socios.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{32FA51F2-0DC8-41D6-B959-3B95E045EFF0}|REST_VECINDAPP.csproj|c:\\users\\alann\\onedrive\\documentos\\code\\angie\\api_vecindapp\\rest_vecindapp\\controllers\\autenticacioncontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{32FA51F2-0DC8-41D6-B959-3B95E045EFF0}|REST_VECINDAPP.csproj|solutionrelative:controllers\\autenticacioncontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -15,24 +31,8 @@
       "RelativeMoniker": "D:0:0:{32FA51F2-0DC8-41D6-B959-3B95E045EFF0}|REST_VECINDAPP.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{32FA51F2-0DC8-41D6-B959-3B95E045EFF0}|REST_VECINDAPP.csproj|c:\\users\\alann\\onedrive\\documentos\\code\\angie\\api_vecindapp\\rest_vecindapp\\capanegocios\\cn_usuarios.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{32FA51F2-0DC8-41D6-B959-3B95E045EFF0}|REST_VECINDAPP.csproj|solutionrelative:capanegocios\\cn_usuarios.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{32FA51F2-0DC8-41D6-B959-3B95E045EFF0}|REST_VECINDAPP.csproj|c:\\users\\alann\\onedrive\\documentos\\code\\angie\\api_vecindapp\\rest_vecindapp\\capanegocios\\cn_socios.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{32FA51F2-0DC8-41D6-B959-3B95E045EFF0}|REST_VECINDAPP.csproj|solutionrelative:capanegocios\\cn_socios.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{32FA51F2-0DC8-41D6-B959-3B95E045EFF0}|REST_VECINDAPP.csproj|c:\\users\\alann\\onedrive\\documentos\\code\\angie\\api_vecindapp\\rest_vecindapp\\modelos\\usuarios.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{32FA51F2-0DC8-41D6-B959-3B95E045EFF0}|REST_VECINDAPP.csproj|solutionrelative:modelos\\usuarios.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{32FA51F2-0DC8-41D6-B959-3B95E045EFF0}|REST_VECINDAPP.csproj|c:\\users\\alann\\onedrive\\documentos\\code\\angie\\api_vecindapp\\rest_vecindapp\\modelos\\socios.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{32FA51F2-0DC8-41D6-B959-3B95E045EFF0}|REST_VECINDAPP.csproj|solutionrelative:modelos\\socios.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{32FA51F2-0DC8-41D6-B959-3B95E045EFF0}|REST_VECINDAPP.csproj|c:\\users\\alann\\onedrive\\documentos\\code\\angie\\api_vecindapp\\rest_vecindapp\\controllers\\usuarioscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{32FA51F2-0DC8-41D6-B959-3B95E045EFF0}|REST_VECINDAPP.csproj|solutionrelative:controllers\\usuarioscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{32FA51F2-0DC8-41D6-B959-3B95E045EFF0}|REST_VECINDAPP.csproj|c:\\users\\alann\\onedrive\\documentos\\code\\angie\\api_vecindapp\\rest_vecindapp\\controllers\\socioscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -53,7 +53,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 9,
+          "SelectedChildIndex": 8,
           "Children": [
             {
               "$type": "Bookmark",
@@ -82,65 +82,67 @@
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\alann\\OneDrive\\Documentos\\code\\Angie\\api_vecindapp\\REST_VECINDAPP\\Program.cs",
-              "RelativeDocumentMoniker": "Program.cs",
-              "ToolTip": "C:\\Users\\alann\\OneDrive\\Documentos\\code\\Angie\\api_vecindapp\\REST_VECINDAPP\\Program.cs",
-              "RelativeToolTip": "Program.cs",
-              "ViewState": "AgIAADoAAAAAAAAAAAAcwFcAAAAKAAAAAAAAAA==",
+              "Title": "cn_Usuarios.cs",
+              "DocumentMoniker": "C:\\Users\\alann\\OneDrive\\Documentos\\code\\Angie\\api_vecindapp\\REST_VECINDAPP\\CapaNegocios\\cn_Usuarios.cs",
+              "RelativeDocumentMoniker": "CapaNegocios\\cn_Usuarios.cs",
+              "ToolTip": "C:\\Users\\alann\\OneDrive\\Documentos\\code\\Angie\\api_vecindapp\\REST_VECINDAPP\\CapaNegocios\\cn_Usuarios.cs",
+              "RelativeToolTip": "CapaNegocios\\cn_Usuarios.cs",
+              "ViewState": "AgIAACkBAAAAAAAAAAAAADsBAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-11T16:25:19.848Z",
+              "WhenOpened": "2025-03-30T01:10:02.832Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "Usuarios.cs",
-              "DocumentMoniker": "C:\\Users\\alann\\OneDrive\\Documentos\\code\\Angie\\api_vecindapp\\REST_VECINDAPP\\Modelos\\Usuarios.cs",
-              "RelativeDocumentMoniker": "Modelos\\Usuarios.cs",
-              "ToolTip": "C:\\Users\\alann\\OneDrive\\Documentos\\code\\Angie\\api_vecindapp\\REST_VECINDAPP\\Modelos\\Usuarios.cs",
-              "RelativeToolTip": "Modelos\\Usuarios.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAAA/AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-11T15:59:23.611Z"
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "appsettings.json",
-              "DocumentMoniker": "C:\\Users\\alann\\OneDrive\\Documentos\\code\\Angie\\api_vecindapp\\REST_VECINDAPP\\appsettings.json",
-              "RelativeDocumentMoniker": "appsettings.json",
-              "ToolTip": "C:\\Users\\alann\\OneDrive\\Documentos\\code\\Angie\\api_vecindapp\\REST_VECINDAPP\\appsettings.json",
-              "RelativeToolTip": "appsettings.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-03-30T02:39:08.276Z",
+              "Title": "UsuariosController.cs",
+              "DocumentMoniker": "C:\\Users\\alann\\OneDrive\\Documentos\\code\\Angie\\api_vecindapp\\REST_VECINDAPP\\Controllers\\UsuariosController.cs",
+              "RelativeDocumentMoniker": "Controllers\\UsuariosController.cs",
+              "ToolTip": "C:\\Users\\alann\\OneDrive\\Documentos\\code\\Angie\\api_vecindapp\\REST_VECINDAPP\\Controllers\\UsuariosController.cs",
+              "RelativeToolTip": "Controllers\\UsuariosController.cs",
+              "ViewState": "AgIAAEcAAAAAAAAAAAAAAFkAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-30T01:08:16.157Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "Usuarios.cs",
+              "DocumentMoniker": "C:\\Users\\alann\\OneDrive\\Documentos\\code\\Angie\\api_vecindapp\\REST_VECINDAPP\\Modelos\\Usuarios.cs",
+              "RelativeDocumentMoniker": "Modelos\\Usuarios.cs",
+              "ToolTip": "C:\\Users\\alann\\OneDrive\\Documentos\\code\\Angie\\api_vecindapp\\REST_VECINDAPP\\Modelos\\Usuarios.cs",
+              "RelativeToolTip": "Modelos\\Usuarios.cs",
+              "ViewState": "AgIAACIAAAAAAAAAAAA/wCkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-11T15:59:23.611Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
               "Title": "AutenticacionController.cs",
               "DocumentMoniker": "C:\\Users\\alann\\OneDrive\\Documentos\\code\\Angie\\api_vecindapp\\REST_VECINDAPP\\Controllers\\AutenticacionController.cs",
               "RelativeDocumentMoniker": "Controllers\\AutenticacionController.cs",
               "ToolTip": "C:\\Users\\alann\\OneDrive\\Documentos\\code\\Angie\\api_vecindapp\\REST_VECINDAPP\\Controllers\\AutenticacionController.cs",
               "RelativeToolTip": "Controllers\\AutenticacionController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAABUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-04-11T16:10:06.459Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 3,
               "Title": "Socios.cs",
               "DocumentMoniker": "C:\\Users\\alann\\OneDrive\\Documentos\\code\\Angie\\api_vecindapp\\REST_VECINDAPP\\Modelos\\Socios.cs",
               "RelativeDocumentMoniker": "Modelos\\Socios.cs",
               "ToolTip": "C:\\Users\\alann\\OneDrive\\Documentos\\code\\Angie\\api_vecindapp\\REST_VECINDAPP\\Modelos\\Socios.cs",
               "RelativeToolTip": "Modelos\\Socios.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAsAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-11T16:05:34.809Z"
+              "WhenOpened": "2025-04-11T16:05:34.809Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -157,7 +159,31 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\alann\\OneDrive\\Documentos\\code\\Angie\\api_vecindapp\\REST_VECINDAPP\\appsettings.json",
+              "RelativeDocumentMoniker": "appsettings.json",
+              "ToolTip": "C:\\Users\\alann\\OneDrive\\Documentos\\code\\Angie\\api_vecindapp\\REST_VECINDAPP\\appsettings.json",
+              "RelativeToolTip": "appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-03-30T02:39:08.276Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\alann\\OneDrive\\Documentos\\code\\Angie\\api_vecindapp\\REST_VECINDAPP\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "C:\\Users\\alann\\OneDrive\\Documentos\\code\\Angie\\api_vecindapp\\REST_VECINDAPP\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AgIAADoAAAAAAAAAAAAcwFcAAAAKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-11T16:25:19.848Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
               "Title": "cn_Socios.cs",
               "DocumentMoniker": "C:\\Users\\alann\\OneDrive\\Documentos\\code\\Angie\\api_vecindapp\\REST_VECINDAPP\\CapaNegocios\\cn_Socios.cs",
               "RelativeDocumentMoniker": "CapaNegocios\\cn_Socios.cs",
@@ -181,18 +207,6 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "UsuariosController.cs",
-              "DocumentMoniker": "C:\\Users\\alann\\OneDrive\\Documentos\\code\\Angie\\api_vecindapp\\REST_VECINDAPP\\Controllers\\UsuariosController.cs",
-              "RelativeDocumentMoniker": "Controllers\\UsuariosController.cs",
-              "ToolTip": "C:\\Users\\alann\\OneDrive\\Documentos\\code\\Angie\\api_vecindapp\\REST_VECINDAPP\\Controllers\\UsuariosController.cs",
-              "RelativeToolTip": "Controllers\\UsuariosController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAACsAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-30T01:08:16.157Z"
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 10,
               "Title": "launchSettings.json",
               "DocumentMoniker": "C:\\Users\\alann\\OneDrive\\Documentos\\code\\Angie\\api_vecindapp\\REST_VECINDAPP\\Properties\\launchSettings.json",
@@ -202,18 +216,6 @@
               "ViewState": "AgIAAA4AAAAAAAAAAAAAAB0AAAAHAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
               "WhenOpened": "2025-04-01T02:46:01.218Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "cn_Usuarios.cs",
-              "DocumentMoniker": "C:\\Users\\alann\\OneDrive\\Documentos\\code\\Angie\\api_vecindapp\\REST_VECINDAPP\\CapaNegocios\\cn_Usuarios.cs",
-              "RelativeDocumentMoniker": "CapaNegocios\\cn_Usuarios.cs",
-              "ToolTip": "C:\\Users\\alann\\OneDrive\\Documentos\\code\\Angie\\api_vecindapp\\REST_VECINDAPP\\CapaNegocios\\cn_Usuarios.cs",
-              "RelativeToolTip": "CapaNegocios\\cn_Usuarios.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAABxAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-30T01:10:02.832Z"
             }
           ]
         }
