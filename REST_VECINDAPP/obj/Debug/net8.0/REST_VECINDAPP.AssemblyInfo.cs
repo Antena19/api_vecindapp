@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("REST_VECINDAPP")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+699de669bdd39e51889f2a43ba76caa284514d47")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+62a957331a5e9a703e02c510d9ef071f1b825ec0")]
 [assembly: System.Reflection.AssemblyProductAttribute("REST_VECINDAPP")]
 [assembly: System.Reflection.AssemblyTitleAttribute("REST_VECINDAPP")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
