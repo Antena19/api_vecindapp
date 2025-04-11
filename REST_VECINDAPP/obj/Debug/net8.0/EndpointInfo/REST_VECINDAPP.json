@@ -135,6 +135,37 @@
         }
       }
     },
+    "/api/Usuarios/registrar": {
+      "post": {
+        "tags": [
+          "Usuarios"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Usuario"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Usuario"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Usuario"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/WeatherForecast": {
       "get": {
         "tags": [
@@ -237,34 +268,51 @@
         "additionalProperties": false
       },
       "Usuario": {
+        "required": [
+          "apellido_paterno",
+          "correo_electronico",
+          "dv_rut",
+          "nombre",
+          "password",
+          "rut"
+        ],
         "type": "object",
         "properties": {
           "rut": {
+            "maximum": 2147483647,
+            "minimum": 1,
             "type": "integer",
             "format": "int32"
           },
           "dv_rut": {
-            "type": "string",
-            "nullable": true
+            "minLength": 1,
+            "pattern": "^[0-9kK]$",
+            "type": "string"
           },
           "nombre": {
-            "type": "string",
-            "nullable": true
+            "maxLength": 100,
+            "minLength": 1,
+            "type": "string"
           },
           "apellido_paterno": {
-            "type": "string",
-            "nullable": true
+            "maxLength": 100,
+            "minLength": 1,
+            "type": "string"
           },
           "apellido_materno": {
+            "maxLength": 100,
+            "minLength": 0,
             "type": "string",
             "nullable": true
           },
           "correo_electronico": {
+            "minLength": 1,
             "type": "string",
-            "nullable": true
+            "format": "email"
           },
           "telefono": {
             "type": "string",
+            "format": "tel",
             "nullable": true
           },
           "direccion": {
@@ -272,8 +320,9 @@
             "nullable": true
           },
           "password": {
-            "type": "string",
-            "nullable": true
+            "maxLength": 100,
+            "minLength": 8,
+            "type": "string"
           },
           "fecha_registro": {
             "type": "string",

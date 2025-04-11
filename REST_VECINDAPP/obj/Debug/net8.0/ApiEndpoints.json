@@ -68,6 +68,22 @@
     ]
   },
   {
+    "ContainingType": "REST_VECINDAPP.Controllers.UsuariosController",
+    "Method": "Registrar",
+    "RelativePath": "api/Usuarios/registrar",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "usuario",
+        "Type": "REST_VECINDAPP.Modelos.Usuario",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "REST_VECINDAPP.Controllers.WeatherForecastController",
     "Method": "Get",
     "RelativePath": "WeatherForecast",
