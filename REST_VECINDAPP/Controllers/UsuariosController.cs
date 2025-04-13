@@ -4,7 +4,7 @@ using REST_VECINDAPP.CapaNegocios;
 using REST_VECINDAPP.Modelos;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-
+using System.ComponentModel.DataAnnotations;
 
 namespace REST_VECINDAPP.Controllers
 {
@@ -32,13 +32,11 @@ namespace REST_VECINDAPP.Controllers
         /// </summary>
         /// <param name="rut">RUT del usuario a buscar. Si es -1 o no se proporciona, devuelve todos los usuarios</param>
         /// <returns>Lista de usuarios o un usuario específico</returns>
-        [Authorize] // Esta línea indica que se requiere token válido para funcionar
+        [Authorize]
         [HttpGet]
         public ActionResult<List<Usuario>> Get([FromQuery] int rut = -1)
         {
-            // Crea una instancia de la capa de negocio para usuarios
             cn_Usuarios cnUsuarios = new cn_Usuarios(_config);
-            // Obtiene los usuarios según el parámetro de RUT y retorna el resultado
             return Ok(cnUsuarios.ListarUsuarios(rut));
         }
 
@@ -51,7 +49,6 @@ namespace REST_VECINDAPP.Controllers
         [AllowAnonymous]
         public IActionResult Registrar([FromBody] Usuario usuario)
         {
-            // Validar modelo de entrada
             if (!ModelState.IsValid)
             {
                 return BadRequest(new
@@ -63,10 +60,7 @@ namespace REST_VECINDAPP.Controllers
                 });
             }
 
-            // Crear instancia de la capa de negocios
             cn_Usuarios cnUsuarios = new cn_Usuarios(_config);
-
-            // Intentar registrar usuario
             var (exito, mensaje) = cnUsuarios.RegistrarUsuario(usuario);
 
             if (exito)
@@ -79,7 +73,6 @@ namespace REST_VECINDAPP.Controllers
             }
             else
             {
-                // Dependiendo del mensaje, podemos devolver diferentes códigos de error
                 if (mensaje.Contains("correo electrónico") || mensaje.Contains("RUT"))
                 {
                     return Conflict(new { mensaje });
@@ -90,53 +83,310 @@ namespace REST_VECINDAPP.Controllers
         }
 
         /// <summary>
-        /// Valida el formato del RUT chileno
+        /// Enviar solicitud para convertirse en socio
         /// </summary>
-        private bool ValidarRut(int rut, string? dv)
+        [HttpPost("socios/solicitud")]
+        [Authorize]
+        public IActionResult EnviarSolicitudSocio([FromBody] SolicitudSocioDto solicitudSocio)
         {
-            // Validar que el RUT no sea negativo
-            if (rut < 1)
-                return false;
-
-            // Validar dígito verificador
-            if (string.IsNullOrWhiteSpace(dv))
-                return false;
-
-            // Convertir a string para cálculo del dígito verificador
-            string rutString = rut.ToString();
-
-            int suma = 0;
-            int multiplicador = 2;
-
-            // Calcular suma de multiplicaciones
-            for (int i = rutString.Length - 1; i >= 0; i--)
+            if (!ModelState.IsValid)
             {
-                suma += int.Parse(rutString[i].ToString()) * multiplicador;
-                multiplicador = multiplicador == 7 ? 2 : multiplicador + 1;
+                return BadRequest(new
+                {
+                    mensaje = "Datos de solicitud de socio inválidos",
+                    errores = ModelState.Values
+                        .SelectMany(v => v.Errors)
+                        .Select(e => e.ErrorMessage)
+                });
             }
 
-            // Calcular dígito verificador
-            int dvCalculado = 11 - (suma % 11);
-            string dvEsperado = dvCalculado == 11 ? "0" :
-                                dvCalculado == 10 ? "K" :
-                                dvCalculado.ToString();
+            cn_Usuarios cnUsuarios = new cn_Usuarios(_config);
 
-            // Comparar con dígito verificador proporcionado
-            return dv.ToUpper() == dvEsperado;
+            var (exito, mensaje) = cnUsuarios.EnviarSolicitudSocio(
+                solicitudSocio.Rut,
+                solicitudSocio.RutArchivo
+            );
+
+            if (exito)
+            {
+                return Ok(new
+                {
+                    mensaje = "Solicitud de socio enviada exitosamente"
+                });
+            }
+            else
+            {
+                if (mensaje.Contains("ya enviada"))
+                {
+                    return Conflict(new { mensaje });
+                }
+
+                if (mensaje.Contains("no cumple"))
+                {
+                    return BadRequest(new { mensaje });
+                }
+
+                return BadRequest(new { mensaje });
+            }
         }
 
         /// <summary>
-        /// Valida el formato de correo electrónico
+        /// Modelo de datos para solicitud de socio
         /// </summary>
-        private bool ValidarCorreoElectronico(string? correo)
+        public class SolicitudSocioDto
         {
-            // Validar que el correo no esté vacío
-            if (string.IsNullOrWhiteSpace(correo))
-                return false;
+            [Required(ErrorMessage = "El RUT del solicitante es obligatorio")]
+            public int Rut { get; set; }
 
-            // Expresión regular para validación de correo electrónico
-            string patron = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
-            return Regex.IsMatch(correo, patron);
+            [Required(ErrorMessage = "El archivo de identificación es obligatorio")]
+            public string RutArchivo { get; set; }
+
+            [MaxLength(500, ErrorMessage = "La descripción no puede exceder 500 caracteres")]
+            public string Descripcion { get; set; }
+        }
+
+        /// <summary>
+        /// Actualizar datos personales del usuario
+        /// </summary>
+        [HttpPut("{rut}")]
+        [Authorize]
+        public IActionResult ActualizarUsuario(int rut, [FromBody] ActualizacionUsuarioDto datosActualizacion)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new
+                {
+                    mensaje = "Datos de actualización inválidos",
+                    errores = ModelState.Values
+                        .SelectMany(v => v.Errors)
+                        .Select(e => e.ErrorMessage)
+                });
+            }
+
+            if (rut <= 0)
+            {
+                return BadRequest(new { mensaje = "RUT inválido" });
+            }
+
+            cn_Usuarios cnUsuarios = new cn_Usuarios(_config);
+
+            var (exito, mensaje) = cnUsuarios.ActualizarDatosUsuario(
+                rut,
+                datosActualizacion.Nombres,
+                datosActualizacion.Apellidos,
+                datosActualizacion.CorreoElectronico,
+                datosActualizacion.Telefono,
+                datosActualizacion.Direccion
+            );
+
+            if (exito)
+            {
+                return Ok(new
+                {
+                    mensaje = "Datos de usuario actualizados exitosamente"
+                });
+            }
+            else
+            {
+                if (mensaje.Contains("no encontrado"))
+                {
+                    return NotFound(new { mensaje });
+                }
+
+                if (mensaje.Contains("correo ya registrado"))
+                {
+                    return Conflict(new { mensaje });
+                }
+
+                return BadRequest(new { mensaje });
+            }
+        }
+
+        /// <summary>
+        /// Modelo de datos para actualización de usuario
+        /// </summary>
+        public class ActualizacionUsuarioDto
+        {
+            [StringLength(100, ErrorMessage = "Los nombres no pueden exceder 100 caracteres")]
+            public string Nombres { get; set; }
+
+            [StringLength(100, ErrorMessage = "Los apellidos no pueden exceder 100 caracteres")]
+            public string Apellidos { get; set; }
+
+            [EmailAddress(ErrorMessage = "El formato del correo electrónico no es válido")]
+            [StringLength(100, ErrorMessage = "El correo electrónico no puede exceder 100 caracteres")]
+            public string CorreoElectronico { get; set; }
+
+            [Phone(ErrorMessage = "El formato del teléfono no es válido")]
+            [StringLength(100, ErrorMessage = "El teléfono no puede exceder 100 caracteres")]
+            public string Telefono { get; set; }
+
+            [StringLength(200, ErrorMessage = "La dirección no puede exceder 200 caracteres")]
+            public string Direccion { get; set; }
+        }
+
+        /// <summary>
+        /// Asignar rol a un usuario
+        /// </summary>
+        [HttpPut("roles/{rut}")]
+        [Authorize]
+        public IActionResult AsignarRol(int rut, [FromBody] RolDto rolDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new
+                {
+                    mensaje = "Datos de asignación de rol inválidos",
+                    errores = ModelState.Values
+                        .SelectMany(v => v.Errors)
+                        .Select(e => e.ErrorMessage)
+                });
+            }
+
+            if (rut <= 0)
+            {
+                return BadRequest(new { mensaje = "RUT inválido" });
+            }
+
+            cn_Usuarios cnUsuarios = new cn_Usuarios(_config);
+
+            var (exito, mensaje) = cnUsuarios.AsignarRolUsuario(
+                rut,
+                rolDto.Rol
+            );
+
+            if (exito)
+            {
+                return Ok(new
+                {
+                    mensaje = "Rol asignado exitosamente"
+                });
+            }
+            else
+            {
+                if (mensaje.Contains("no encontrado"))
+                {
+                    return NotFound(new { mensaje });
+                }
+
+                if (mensaje.Contains("no autorizado"))
+                {
+                    return Unauthorized(new { mensaje });
+                }
+
+                return BadRequest(new { mensaje });
+            }
+        }
+
+        /// <summary>
+        /// Modelo de datos para asignación de rol
+        /// </summary>
+        public class RolDto
+        {
+            [Required(ErrorMessage = "El rol es obligatorio")]
+            [RegularExpression("^(Vecino|Socio|Directiva)$", ErrorMessage = "Rol inválido. Debe ser Vecino, Socio o Directiva")]
+            public string Rol { get; set; }
+        }
+
+        /// <summary>
+        /// Eliminar un usuario del sistema
+        /// </summary>
+        [HttpDelete("{rut}")]
+        [Authorize]
+        public IActionResult EliminarUsuario(int rut)
+        {
+            if (rut <= 0)
+            {
+                return BadRequest(new { mensaje = "RUT inválido" });
+            }
+
+            cn_Usuarios cnUsuarios = new cn_Usuarios(_config);
+
+            var (exito, mensaje) = cnUsuarios.EliminarUsuario(rut);
+
+            if (exito)
+            {
+                return Ok(new
+                {
+                    mensaje = "Usuario eliminado exitosamente"
+                });
+            }
+            else
+            {
+                if (mensaje.Contains("no encontrado"))
+                {
+                    return NotFound(new { mensaje });
+                }
+
+                if (mensaje.Contains("no autorizado"))
+                {
+                    return Unauthorized(new { mensaje });
+                }
+
+                if (mensaje.Contains("no se puede eliminar"))
+                {
+                    return Conflict(new { mensaje });
+                }
+
+                return BadRequest(new { mensaje });
+            }
+        }
+
+        /// <summary>
+        /// Obtener información del usuario autenticado
+        /// </summary>
+        [HttpGet("autenticado")]
+        [Authorize]
+        public IActionResult ObtenerUsuarioAutenticado()
+        {
+            cn_Usuarios cnUsuarios = new cn_Usuarios(_config);
+
+            int rutUsuario = ObtenerRutUsuarioAutenticado();
+
+            var (exito, usuario, mensaje) = cnUsuarios.ObtenerDatosUsuario(rutUsuario);
+
+            if (exito)
+            {
+                return Ok(new
+                {
+                    mensaje = "Información de usuario obtenida exitosamente",
+                    usuario = new
+                    {
+                        rut = usuario.rut,
+                        nombre = usuario.nombre,
+                        apellido_paterno = usuario.apellido_paterno,
+                        apellido_materno = usuario.apellido_materno,
+                        correo_electronico = usuario.correo_electronico,
+                        telefono = usuario.telefono,
+                        direccion = usuario.direccion,
+                        tipo_usuario = usuario.tipo_usuario
+                    }
+                });
+            }
+            else
+            {
+                if (mensaje.Contains("no encontrado"))
+                {
+                    return NotFound(new { mensaje });
+                }
+
+                return BadRequest(new { mensaje });
+            }
+        }
+
+        /// <summary>
+        /// Método para obtener el RUT del usuario autenticado
+        /// </summary>
+        private int ObtenerRutUsuarioAutenticado()
+        {
+            var rut = User.Claims.FirstOrDefault(c => c.Type == "Rut")?.Value;
+
+            if (string.IsNullOrEmpty(rut))
+            {
+                throw new UnauthorizedAccessException("No se pudo obtener el RUT del usuario autenticado");
+            }
+
+            return int.Parse(rut);
         }
     }
 }

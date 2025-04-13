@@ -1,6 +1,22 @@
 [
   {
     "ContainingType": "REST_VECINDAPP.Controllers.AutenticacionController",
+    "Method": "ConfirmarRecuperacionClave",
+    "RelativePath": "api/Autenticacion/confirmar-recuperacion",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "REST_VECINDAPP.Controllers.AutenticacionController\u002BConfirmacionRecuperacionRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "REST_VECINDAPP.Controllers.AutenticacionController",
     "Method": "Login",
     "RelativePath": "api/Autenticacion/login",
     "HttpMethod": "POST",
@@ -10,6 +26,22 @@
       {
         "Name": "request",
         "Type": "REST_VECINDAPP.Controllers.AutenticacionController\u002BLoginRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "REST_VECINDAPP.Controllers.AutenticacionController",
+    "Method": "SolicitarRecuperacionClave",
+    "RelativePath": "api/Autenticacion/recuperar-clave",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "REST_VECINDAPP.Controllers.AutenticacionController\u002BRecuperacionClaveRequest",
         "IsRequired": true
       }
     ],
@@ -69,6 +101,53 @@
   },
   {
     "ContainingType": "REST_VECINDAPP.Controllers.UsuariosController",
+    "Method": "ActualizarUsuario",
+    "RelativePath": "api/Usuarios/{rut}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "rut",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "datosActualizacion",
+        "Type": "REST_VECINDAPP.Controllers.UsuariosController\u002BActualizacionUsuarioDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "REST_VECINDAPP.Controllers.UsuariosController",
+    "Method": "EliminarUsuario",
+    "RelativePath": "api/Usuarios/{rut}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "rut",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "REST_VECINDAPP.Controllers.UsuariosController",
+    "Method": "ObtenerUsuarioAutenticado",
+    "RelativePath": "api/Usuarios/autenticado",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "REST_VECINDAPP.Controllers.UsuariosController",
     "Method": "Registrar",
     "RelativePath": "api/Usuarios/registrar",
     "HttpMethod": "POST",
@@ -78,6 +157,43 @@
       {
         "Name": "usuario",
         "Type": "REST_VECINDAPP.Modelos.Usuario",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "REST_VECINDAPP.Controllers.UsuariosController",
+    "Method": "AsignarRol",
+    "RelativePath": "api/Usuarios/roles/{rut}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "rut",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "rolDto",
+        "Type": "REST_VECINDAPP.Controllers.UsuariosController\u002BRolDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "REST_VECINDAPP.Controllers.UsuariosController",
+    "Method": "EnviarSolicitudSocio",
+    "RelativePath": "api/Usuarios/socios/solicitud",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "solicitudSocio",
+        "Type": "REST_VECINDAPP.Controllers.UsuariosController\u002BSolicitudSocioDto",
         "IsRequired": true
       }
     ],

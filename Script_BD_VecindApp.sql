@@ -511,7 +511,7 @@ CREATE TABLE `usuarios` (
 
 LOCK TABLES `usuarios` WRITE;
 /*!40000 ALTER TABLE `usuarios` DISABLE KEYS */;
-INSERT INTO `usuarios` VALUES (11987654,'3','Juan','Tapia','Flores','juan.tapia@gmail.com','56954321098','Pasaje Los Naranjos 567, Portal Puerto Montt','$2a$10$X7VF.EPitdGT9lMp4VKCQOQVkfL6K7AGszw3sGGDOztSsgbac2Joa','2023-02-10',1,'vecino',NULL,NULL),(12345678,'5','Admin','Sistema','VecindApp','admin@vecindapp.cl','56912345678','Sede Junta de Vecinos, Portal Puerto Montt','$2a$10$vKLhDGsH4iP.2D5hJTGJ.uOcrUBJwvlN9jqwZRIXsj7Rr9IBJrZBO','2025-04-08',1,'admin',NULL,NULL),(12345987,'6','Pedro','López','Rojas','pedro.lopez@gmail.com','56965432109','Calle Las Violetas 234, Portal Puerto Montt','$2a$10$LcZI1UrGmcZKVqm5HOZ.g.YG6WyHjt5e6hcwfcBFwKrnuHohFZDTC','2023-02-05',1,'socio',NULL,NULL),(13456789,'0','Miguel','Torres','Díaz','miguel.torres@gmail.com','56910987654','Calle Los Cerezos 901, Portal Puerto Montt','$2a$10$X7VF.EPitdGT9lMp4VKCQOQVkfL6K7AGszw3sGGDOztSsgbac2Joa','2023-03-01',1,'vecino',NULL,NULL),(14567890,'1','María','Sánchez','Pérez','maria.sanchez@gmail.com','56987654321','Pasaje Los Aromos 456, Portal Puerto Montt','$2a$10$8cjz/7qHzP5C6aS1wEJ4Xe9KVJ0sFdP5KXW4O8M5KwO2UDjVfVNzO','2023-01-20',1,'directiva',NULL,NULL),(15432789,'8','César','San Martín','Gómez','carlos.martinez@gmail.com','56998765432','Calle Principal 123, Portal Puerto Montt','$2a$10$8cjz/7qHzP5C6aS1wEJ4Xe9KVJ0sFdP5KXW4O8M5KwO2UDjVfVNzO','2023-01-15',1,'directiva',NULL,NULL),(16789456,'2','Ana','González','Vidal','ana.gonzalez@gmail.com','56976543210','Avenida Los Pinos 789, Portal Puerto Montt','$2a$10$8cjz/7qHzP5C6aS1wEJ4Xe9KVJ0sFdP5KXW4O8M5KwO2UDjVfVNzO','2023-01-25',1,'directiva',NULL,NULL),(17654321,'5','Carmen','Rodríguez','Silva','carmen.rodriguez@gmail.com','56943210987','Calle Las Acacias 890, Portal Puerto Montt','$2a$10$X7VF.EPitdGT9lMp4VKCQOQVkfL6K7AGszw3sGGDOztSsgbac2Joa','2023-02-15',1,'vecino',NULL,NULL),(18765432,'1','Roberto','Fernández','Muñoz','roberto.fernandez@gmail.com','56932109876','Avenida Principal 345, Portal Puerto Montt','$2a$10$X7VF.EPitdGT9lMp4VKCQOQVkfL6K7AGszw3sGGDOztSsgbac2Joa','2023-02-20',1,'vecino',NULL,NULL),(19876543,'9','Patricia','Gutiérrez','Castro','patricia.gutierrez@gmail.com','56921098765','Pasaje Los Manzanos 678, Portal Puerto Montt','$2a$10$X7VF.EPitdGT9lMp4VKCQOQVkfL6K7AGszw3sGGDOztSsgbac2Joa','2023-02-25',1,'vecino',NULL,NULL),(20987654,'3','Laura','Vargas','Mora','laura.vargas@gmail.com','56909876543','Avenida Los Alamos 234, Portal Puerto Montt','$2a$10$X7VF.EPitdGT9lMp4VKCQOQVkfL6K7AGszw3sGGDOztSsgbac2Joa','2023-03-05',1,'vecino',NULL,NULL);
+INSERT INTO `usuarios` VALUES (11987654,'3','Juan','Tapia','Flores','juan.tapia@gmail.com','56954321098','Pasaje Los Naranjos 567, Portal Puerto Montt','$2a$10$X7VF.EPitdGT9lMp4VKCQOQVkfL6K7AGszw3sGGDOztSsgbac2Joa','2023-02-10',1,'vecino',NULL,NULL),(12345678,'5','Admin','Sistema','VecindApp','admin@vecindapp.cl','56912345678','Sede Junta de Vecinos, Portal Puerto Montt','$2a$10$vKLhDGsH4iP.2D5hJTGJ.uOcrUBJwvlN9jqwZRIXsj7Rr9IBJrZBO','2025-04-08',1,'admin',NULL,NULL),(12345987,'6','Pedro','López','Rojas','pedro.lopez@gmail.com','56965432109','Calle Las Violetas 234, Portal Puerto Montt','$2a$10$LcZI1UrGmcZKVqm5HOZ.g.YG6WyHjt5e6hcwfcBFwKrnuHohFZDTC','2023-02-05',1,'socio',NULL,NULL),(13456789,'0','Miguel','Torres','Díaz','miguel.torres@gmail.com','56910987654','Calle Los Cerezos 901, Portal Puerto Montt','$2a$10$X7VF.EPitdGT9lMp4VKCQOQVkfL6K7AGszw3sGGDOztSsgbac2Joa','2023-03-01',1,'vecino',NULL,NULL),(14567890,'1','María','Sánchez','Pérez','maria.sanchez@gmail.com','56987654321','Pasaje Los Aromos 456, Portal Puerto Montt','$2a$10$8cjz/7qHzP5C6aS1wEJ4Xe9KVJ0sFdP5KXW4O8M5KwO2UDjVfVNzO','2023-01-20',1,'directiva',NULL,NULL),(15432789,'8','César','San Martín','Gómez','carlos.martinez@gmail.com','56998765432','Calle Principal 123, Portal Puerto Montt','$2a$10$8cjz/7qHzP5C6aS1wEJ4Xe9KVJ0sFdP5KXW4O8M5KwO2UDjVfVNzO','2023-01-15',1,'directiva',NULL,NULL),(16789456,'2','Ana','González','Vidal','ana.gonzalez@gmail.com','56976543210','Avenida Los Pinos 789, Portal Puerto Montt','$2a$10$8cjz/7qHzP5C6aS1wEJ4Xe9KVJ0sFdP5KXW4O8M5KwO2UDjVfVNzO','2023-01-25',1,'directiva',NULL,NULL),(17144575,'2','Angelina','Mendoza','Yañez','user@example.com','998555466','string','30b62cbe41ff0cd5a6cd8ed2ff4f47d4a152b56e0e79587a3758137f58d2bec8','2025-04-13',1,'vecino',NULL,NULL),(17654321,'5','Carmen','Rodríguez','Silva','carmen.rodriguez@gmail.com','56943210987','Calle Las Acacias 890, Portal Puerto Montt','$2a$10$X7VF.EPitdGT9lMp4VKCQOQVkfL6K7AGszw3sGGDOztSsgbac2Joa','2023-02-15',1,'vecino',NULL,NULL),(18765432,'1','Roberto','Fernández','Muñoz','roberto.fernandez@gmail.com','56932109876','Avenida Principal 345, Portal Puerto Montt','$2a$10$X7VF.EPitdGT9lMp4VKCQOQVkfL6K7AGszw3sGGDOztSsgbac2Joa','2023-02-20',1,'vecino',NULL,NULL),(19876543,'9','Patricia','Gutiérrez','Castro','patricia.gutierrez@gmail.com','56921098765','Pasaje Los Manzanos 678, Portal Puerto Montt','$2a$10$X7VF.EPitdGT9lMp4VKCQOQVkfL6K7AGszw3sGGDOztSsgbac2Joa','2023-02-25',1,'vecino',NULL,NULL),(20987654,'3','Laura','Vargas','Mora','laura.vargas@gmail.com','56909876543','Avenida Los Alamos 234, Portal Puerto Montt','$2a$10$X7VF.EPitdGT9lMp4VKCQOQVkfL6K7AGszw3sGGDOztSsgbac2Joa','2023-03-05',1,'vecino',NULL,NULL);
 /*!40000 ALTER TABLE `usuarios` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1245,6 +1245,61 @@ BEGIN
     ELSE
         SIGNAL SQLSTATE '45000' 
         SET MESSAGE_TEXT = 'Correo electrónico no coincide con el RUT';
+    END IF;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `SP_INICIAR_SESION` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_INICIAR_SESION`(
+    IN p_rut INT,
+    IN p_password VARCHAR(255),
+    OUT p_mensaje VARCHAR(255)
+)
+BEGIN
+    DECLARE v_usuario_existe INT;
+    DECLARE v_password_correcta INT;
+
+    -- Verificar si el usuario existe
+    SELECT COUNT(*) INTO v_usuario_existe
+    FROM usuarios
+    WHERE rut = p_rut;
+
+    -- Si el usuario no existe
+    IF v_usuario_existe = 0 THEN
+        SET p_mensaje = 'Usuario no encontrado';
+    ELSE
+        -- Verificar si la contraseña es correcta
+        SELECT COUNT(*) INTO v_password_correcta
+        FROM usuarios
+        WHERE rut = p_rut AND password = p_password;
+
+        -- Verificar estado del usuario
+        IF v_password_correcta = 0 THEN
+            SET p_mensaje = 'Contraseña incorrecta';
+        ELSE
+            -- Verificar si el usuario está activo
+            SELECT COUNT(*) INTO v_usuario_existe
+            FROM usuarios
+            WHERE rut = p_rut AND estado = 1;
+
+            IF v_usuario_existe = 0 THEN
+                SET p_mensaje = 'Usuario inactivo';
+            ELSE
+                SET p_mensaje = 'OK';
+            END IF;
+        END IF;
     END IF;
 END ;;
 DELIMITER ;
@@ -1996,4 +2051,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-04-08 17:34:13
+-- Dump completed on 2025-04-13  0:56:59

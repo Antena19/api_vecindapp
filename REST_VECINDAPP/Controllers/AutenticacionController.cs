@@ -7,6 +7,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
+using System.ComponentModel.DataAnnotations;
 
 namespace REST_VECINDAPP.Controllers
 {
@@ -33,8 +34,40 @@ namespace REST_VECINDAPP.Controllers
         /// </summary>
         public class LoginRequest
         {
+            [Required(ErrorMessage = "El RUT es obligatorio")]
             public string? Username { get; set; }
+
+            [Required(ErrorMessage = "La contraseña es obligatoria")]
             public string? Password { get; set; }
+        }
+
+        /// <summary>
+        /// Modelo para la solicitud de recuperación de contraseña
+        /// </summary>
+        public class RecuperacionClaveRequest
+        {
+            [Required(ErrorMessage = "El correo electrónico es obligatorio")]
+            [EmailAddress(ErrorMessage = "El formato del correo electrónico no es válido")]
+            public string? CorreoElectronico { get; set; }
+        }
+
+        /// <summary>
+        /// Modelo para la confirmación de recuperación de contraseña
+        /// </summary>
+        public class ConfirmacionRecuperacionRequest
+        {
+            [Required(ErrorMessage = "El RUT es obligatorio")]
+            public int Rut { get; set; }
+
+            [Required(ErrorMessage = "El token de recuperación es obligatorio")]
+            public string? Token { get; set; }
+
+            [Required(ErrorMessage = "La nueva contraseña es obligatoria")]
+            [StringLength(100, MinimumLength = 8, ErrorMessage = "La contraseña debe tener entre 8 y 100 caracteres")]
+            public string? NuevaContrasena { get; set; }
+
+            [Required(ErrorMessage = "La confirmación de contraseña es obligatoria")]
+            public string? ConfirmarContrasena { get; set; }
         }
 
         /// <summary>
@@ -45,45 +78,32 @@ namespace REST_VECINDAPP.Controllers
         [HttpPost("login")]
         public IActionResult Login([FromBody] LoginRequest request)
         {
-            // Verificar que las credenciales no sean nulas
-            if (string.IsNullOrEmpty(request.Username) || string.IsNullOrEmpty(request.Password))
+            // Validar modelo de entrada
+            if (!ModelState.IsValid)
             {
-                return BadRequest(new { message = "El nombre de usuario y la contraseña son obligatorios" });
+                return BadRequest(new
+                {
+                    mensaje = "Datos de inicio de sesión inválidos",
+                    errores = ModelState.Values
+                        .SelectMany(v => v.Errors)
+                        .Select(e => e.ErrorMessage)
+                });
             }
 
-            // Usar temporalmente credenciales hardcodeadas para simplificar
-            // En un entorno de producción, deberías verificar contra la base de datos
-            if (request.Username != "admin" || request.Password != "1234")
+            // Intentar parsear el username como RUT
+            if (!int.TryParse(request.Username, out int rut))
             {
-                return Unauthorized(new { message = "Credenciales inválidas" });
+                return BadRequest(new { message = "El nombre de usuario debe ser un RUT válido" });
             }
 
-            /* Para implementar la verificación contra la base de datos, descomenta este código
-            // Obtener usuarios de la base de datos
+            // Usar la capa de negocios para validar las credenciales
             cn_Usuarios cnUsuarios = new cn_Usuarios(_config);
-            var usuarios = cnUsuarios.ListarUsuarios(-1);
-            
-            // Buscar el usuario por nombre de usuario
-            var usuario = usuarios.FirstOrDefault(u => 
-                u.nombre?.ToLower() == request.Username.ToLower() || 
-                u.correo_electronico?.ToLower() == request.Username.ToLower());
-            
-            if (usuario == null)
+            var (exito, mensaje) = cnUsuarios.IniciarSesion(rut, request.Password);
+
+            if (!exito)
             {
-                return Unauthorized(new { message = "Credenciales inválidas" });
+                return Unauthorized(new { message = mensaje });
             }
-            
-            // Para validar la contraseña con BCrypt necesitarías instalar el paquete BCrypt.Net-Next
-            // bool passwordValid = BCrypt.Net.BCrypt.Verify(request.Password, usuario.password);
-            
-            // Por ahora, comparamos directamente (solo para desarrollo)
-            bool passwordValid = usuario.password == request.Password;
-            
-            if (!passwordValid)
-            {
-                return Unauthorized(new { message = "Credenciales inválidas" });
-            }
-            */
 
             // Crear token JWT
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -94,7 +114,8 @@ namespace REST_VECINDAPP.Controllers
                 Subject = new ClaimsIdentity(new[]
                 {
                     new Claim(ClaimTypes.Name, request.Username),
-                    new Claim(ClaimTypes.Role, "Admin")
+                    new Claim("Rut", rut.ToString()), // Agregar RUT como claim
+                    new Claim(ClaimTypes.Role, "Usuario") // Puedes ajustar esto según el rol del usuario
                 }),
                 Expires = DateTime.UtcNow.AddHours(1), // Expira en 1 hora
                 Issuer = _config["Jwt:Issuer"],
@@ -107,6 +128,96 @@ namespace REST_VECINDAPP.Controllers
             var tokenString = tokenHandler.WriteToken(token);
 
             return Ok(new { token = tokenString });
+        }
+
+        /// <summary>
+        /// Solicitar recuperación de contraseña
+        /// </summary>
+        /// <param name="request">Datos para solicitar recuperación de contraseña</param>
+        /// <returns>Resultado de la solicitud de recuperación</returns>
+        [HttpPost("recuperar-clave")]
+        public IActionResult SolicitarRecuperacionClave([FromBody] RecuperacionClaveRequest request)
+        {
+            // Validar modelo de entrada
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new
+                {
+                    mensaje = "Datos de recuperación inválidos",
+                    errores = ModelState.Values
+                        .SelectMany(v => v.Errors)
+                        .Select(e => e.ErrorMessage)
+                });
+            }
+
+            // Usar la capa de negocios para solicitar recuperación de clave
+            cn_Usuarios cnUsuarios = new cn_Usuarios(_config);
+            var (exito, mensaje) = cnUsuarios.SolicitarRecuperacionClave(request.CorreoElectronico);
+
+            if (exito)
+            {
+                return Ok(new { mensaje = "Se ha enviado un correo de recuperación" });
+            }
+            else
+            {
+                // Manejar diferentes tipos de errores
+                if (mensaje.Contains("no encontrado"))
+                {
+                    return NotFound(new { mensaje });
+                }
+
+                return BadRequest(new { mensaje });
+            }
+        }
+
+        /// <summary>
+        /// Confirmar recuperación de contraseña
+        /// </summary>
+        /// <param name="request">Datos para confirmar recuperación de contraseña</param>
+        /// <returns>Resultado de la confirmación de recuperación</returns>
+        [HttpPost("confirmar-recuperacion")]
+        public IActionResult ConfirmarRecuperacionClave([FromBody] ConfirmacionRecuperacionRequest request)
+        {
+            // Validar modelo de entrada
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new
+                {
+                    mensaje = "Datos de confirmación inválidos",
+                    errores = ModelState.Values
+                        .SelectMany(v => v.Errors)
+                        .Select(e => e.ErrorMessage)
+                });
+            }
+
+            // Validar que las contraseñas coincidan
+            if (request.NuevaContrasena != request.ConfirmarContrasena)
+            {
+                return BadRequest(new { mensaje = "Las contraseñas no coinciden" });
+            }
+
+            // Usar la capa de negocios para confirmar recuperación de clave
+            cn_Usuarios cnUsuarios = new cn_Usuarios(_config);
+            var (exito, mensaje) = cnUsuarios.ConfirmarRecuperacionClave(
+                request.Rut,
+                request.Token,
+                request.NuevaContrasena
+            );
+
+            if (exito)
+            {
+                return Ok(new { mensaje = "Contraseña restablecida exitosamente" });
+            }
+            else
+            {
+                // Manejar diferentes tipos de errores
+                if (mensaje.Contains("token inválido") || mensaje.Contains("expirado"))
+                {
+                    return Unauthorized(new { mensaje });
+                }
+
+                return BadRequest(new { mensaje });
+            }
         }
     }
 }

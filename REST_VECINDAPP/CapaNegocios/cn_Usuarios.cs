@@ -312,5 +312,479 @@ namespace REST_VECINDAPP.CapaNegocios
                 }
             }
         }
+
+        /// <summary>
+        /// Iniciar sesión de usuario
+        /// </summary>
+        /// <param name="rut">RUT del usuario</param>
+        /// <param name="contrasena">Contraseña del usuario</param>
+        /// <returns>Resultado del inicio de sesión</returns>
+        public (bool Exito, string Mensaje) IniciarSesion(int rut, string contrasena)
+        {
+            // Hashear la contraseña para comparación
+            string passwordHash = HashearContraseña(contrasena);
+
+            using (MySqlConnection conn = new MySqlConnection(_connectionString))
+            {
+                try
+                {
+                    conn.Open();
+                    using (MySqlCommand cmd = new MySqlCommand("SP_INICIAR_SESION", conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        // Parámetros del procedimiento almacenado
+                        cmd.Parameters.AddWithValue("@p_rut", rut);
+                        cmd.Parameters.AddWithValue("@p_password", passwordHash);
+
+                        // Parámetro de salida para el mensaje
+                        MySqlParameter msgParam = new MySqlParameter("@p_mensaje", MySqlDbType.VarChar, 255);
+                        msgParam.Direction = ParameterDirection.Output;
+                        cmd.Parameters.Add(msgParam);
+
+                        // Ejecutar el comando
+                        cmd.ExecuteNonQuery();
+
+                        // Obtener el mensaje de salida
+                        string mensaje = msgParam.Value?.ToString() ?? "";
+
+                        return (mensaje == "OK", mensaje);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return (false, $"Error al iniciar sesión: {ex.Message}");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Solicitar recuperación de contraseña
+        /// </summary>
+        /// <param name="correoElectronico">Correo electrónico del usuario</param>
+        /// <returns>Resultado de la solicitud de recuperación</returns>
+        public (bool Exito, string Mensaje) SolicitarRecuperacionClave(string correoElectronico)
+        {
+            // Validar formato de correo electrónico
+            if (!ValidarCorreoElectronico(correoElectronico))
+            {
+                return (false, "El correo electrónico no tiene un formato válido.");
+            }
+
+            using (MySqlConnection conn = new MySqlConnection(_connectionString))
+            {
+                try
+                {
+                    conn.Open();
+                    using (MySqlCommand cmd = new MySqlCommand("SP_SOLICITAR_RECUPERACION_CLAVE", conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        // Parámetros del procedimiento almacenado
+                        cmd.Parameters.AddWithValue("@p_correo_electronico", correoElectronico);
+
+                        // Parámetro de salida para el mensaje
+                        MySqlParameter msgParam = new MySqlParameter("@p_mensaje", MySqlDbType.VarChar, 255);
+                        msgParam.Direction = ParameterDirection.Output;
+                        cmd.Parameters.Add(msgParam);
+
+                        // Ejecutar el comando
+                        cmd.ExecuteNonQuery();
+
+                        // Obtener el mensaje de salida
+                        string mensaje = msgParam.Value?.ToString() ?? "";
+
+                        return (mensaje == "OK", mensaje);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return (false, $"Error al solicitar recuperación de clave: {ex.Message}");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Confirmar recuperación de contraseña
+        /// </summary>
+        /// <param name="rut">RUT del usuario</param>
+        /// <param name="token">Token de recuperación</param>
+        /// <param name="nuevaContrasena">Nueva contraseña</param>
+        /// <returns>Resultado de la confirmación de recuperación</returns>
+        public (bool Exito, string Mensaje) ConfirmarRecuperacionClave(int rut, string token, string nuevaContrasena)
+        {
+            // Validar complejidad de la nueva contraseña
+            if (!ValidarComplejidadContraseña(nuevaContrasena))
+            {
+                return (false, "La nueva contraseña no cumple con los requisitos de complejidad.");
+            }
+
+            // Hashear la nueva contraseña
+            string nuevaContrasenaHash = HashearContraseña(nuevaContrasena);
+
+            using (MySqlConnection conn = new MySqlConnection(_connectionString))
+            {
+                try
+                {
+                    conn.Open();
+                    using (MySqlCommand cmd = new MySqlCommand("SP_CONFIRMAR_RECUPERACION_CLAVE", conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        // Parámetros del procedimiento almacenado
+                        cmd.Parameters.AddWithValue("@p_rut", rut);
+                        cmd.Parameters.AddWithValue("@p_token", token);
+                        cmd.Parameters.AddWithValue("@p_nueva_contrasena", nuevaContrasenaHash);
+
+                        // Parámetro de salida para el mensaje
+                        MySqlParameter msgParam = new MySqlParameter("@p_mensaje", MySqlDbType.VarChar, 255);
+                        msgParam.Direction = ParameterDirection.Output;
+                        cmd.Parameters.Add(msgParam);
+
+                        // Ejecutar el comando
+                        cmd.ExecuteNonQuery();
+
+                        // Obtener el mensaje de salida
+                        string mensaje = msgParam.Value?.ToString() ?? "";
+
+                        return (mensaje == "OK", mensaje);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return (false, $"Error al confirmar recuperación de clave: {ex.Message}");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Cambiar contraseña del usuario
+        /// </summary>
+        /// <param name="rut">RUT del usuario</param>
+        /// <param name="contrasenaActual">Contraseña actual</param>
+        /// <param name="nuevaContrasena">Nueva contraseña</param>
+        /// <returns>Resultado del cambio de contraseña</returns>
+        public (bool Exito, string Mensaje) CambiarContrasena(int rut, string contrasenaActual, string nuevaContrasena)
+        {
+            // Validar complejidad de la nueva contraseña
+            if (!ValidarComplejidadContraseña(nuevaContrasena))
+            {
+                return (false, "La nueva contraseña no cumple con los requisitos de complejidad.");
+            }
+
+            // Hashear las contraseñas
+            string contrasenaActualHash = HashearContraseña(contrasenaActual);
+            string nuevaContrasenaHash = HashearContraseña(nuevaContrasena);
+
+            using (MySqlConnection conn = new MySqlConnection(_connectionString))
+            {
+                try
+                {
+                    conn.Open();
+                    using (MySqlCommand cmd = new MySqlCommand("SP_CAMBIAR_CONTRASENA", conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        // Parámetros del procedimiento almacenado
+                        cmd.Parameters.AddWithValue("@p_rut", rut);
+                        cmd.Parameters.AddWithValue("@p_contrasena_actual", contrasenaActualHash);
+                        cmd.Parameters.AddWithValue("@p_nueva_contrasena", nuevaContrasenaHash);
+
+                        // Parámetro de salida para el mensaje
+                        MySqlParameter msgParam = new MySqlParameter("@p_mensaje", MySqlDbType.VarChar, 255);
+                        msgParam.Direction = ParameterDirection.Output;
+                        cmd.Parameters.Add(msgParam);
+
+                        // Ejecutar el comando
+                        cmd.ExecuteNonQuery();
+
+                        // Obtener el mensaje de salida
+                        string mensaje = msgParam.Value?.ToString() ?? "";
+
+                        return (mensaje == "OK", mensaje);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return (false, $"Error al cambiar contraseña: {ex.Message}");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Actualizar datos del usuario
+        /// </summary>
+        /// <param name="rut">RUT del usuario</param>
+        /// <param name="nombres">Nombres del usuario</param>
+        /// <param name="apellidoPaterno">Apellido paterno</param>
+        /// <param name="apellidoMaterno">Apellido materno (opcional)</param>
+        /// <param name="correoElectronico">Correo electrónico</param>
+        /// <param name="telefono">Teléfono (opcional)</param>
+        /// <param name="direccion">Dirección (opcional)</param>
+        /// <param name="apellidoMaterno">apellidoMaterno (opcional)</param>
+        /// <returns>Resultado de la actualización</returns>
+        public (bool Exito, string Mensaje) ActualizarDatosUsuario(
+            int rut,
+            string nombres,
+            string apellidoPaterno,
+            string? correoElectronico = null,
+            string? telefono = null,
+            string? direccion = null,
+            string? apellidoMaterno = null)
+        {
+            // Validaciones
+            if (string.IsNullOrWhiteSpace(nombres))
+            {
+                return (false, "Los nombres son obligatorios.");
+            }
+
+            if (string.IsNullOrWhiteSpace(apellidoPaterno))
+            {
+                return (false, "El apellido paterno es obligatorio.");
+            }
+
+            // Validar correo electrónico si se proporciona
+            if (!string.IsNullOrWhiteSpace(correoElectronico) &&
+                !ValidarCorreoElectronico(correoElectronico))
+            {
+                return (false, "El correo electrónico no tiene un formato válido.");
+            }
+
+            // Validar teléfono si se proporciona
+            if (!string.IsNullOrWhiteSpace(telefono) &&
+                !ValidarTelefono(telefono))
+            {
+                return (false, "El número de teléfono no tiene un formato válido.");
+            }
+
+            using (MySqlConnection conn = new MySqlConnection(_connectionString))
+            {
+                try
+                {
+                    conn.Open();
+                    using (MySqlCommand cmd = new MySqlCommand("SP_ACTUALIZAR_DATOS_USUARIO", conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        // Parámetros del procedimiento almacenado
+                        cmd.Parameters.AddWithValue("@p_rut", rut);
+                        cmd.Parameters.AddWithValue("@p_nombres", nombres);
+                        cmd.Parameters.AddWithValue("@p_apellido_paterno", apellidoPaterno);
+                        cmd.Parameters.AddWithValue("@p_apellido_materno", apellidoMaterno ?? (object)DBNull.Value);
+                        cmd.Parameters.AddWithValue("@p_correo_electronico", correoElectronico ?? (object)DBNull.Value);
+                        cmd.Parameters.AddWithValue("@p_telefono", telefono ?? (object)DBNull.Value);
+                        cmd.Parameters.AddWithValue("@p_direccion", direccion ?? (object)DBNull.Value);
+
+                        // Parámetro de salida para el mensaje
+                        MySqlParameter msgParam = new MySqlParameter("@p_mensaje", MySqlDbType.VarChar, 255);
+                        msgParam.Direction = ParameterDirection.Output;
+                        cmd.Parameters.Add(msgParam);
+
+                        // Ejecutar el comando
+                        cmd.ExecuteNonQuery();
+
+                        // Obtener el mensaje de salida
+                        string mensaje = msgParam.Value?.ToString() ?? "";
+
+                        return (mensaje == "OK", mensaje);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return (false, $"Error al actualizar datos de usuario: {ex.Message}");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Obtener datos de un usuario
+        /// </summary>
+        /// <param name="rut">RUT del usuario</param>
+        /// <returns>Datos del usuario</returns>
+        public (bool Exito, Usuario? Usuario, string Mensaje) ObtenerDatosUsuario(int rut)
+        {
+            using (MySqlConnection conn = new MySqlConnection(_connectionString))
+            {
+                try
+                {
+                    conn.Open();
+                    using (MySqlCommand cmd = new MySqlCommand("SP_OBTENER_DATOS_USUARIO", conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        // Parámetros del procedimiento almacenado
+                        cmd.Parameters.AddWithValue("@p_rut", rut);
+
+                        // Ejecutar el comando
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                // Crear objeto Usuario con los datos obtenidos
+                                Usuario usuario = new Usuario
+                                {
+                                    rut = Convert.ToInt32(reader["rut"]),
+                                    dv_rut = Convert.ToString(reader["dv_rut"]),
+                                    nombre = Convert.ToString(reader["nombre"]),
+                                    apellido_paterno = Convert.ToString(reader["apellido_paterno"]),
+                                    apellido_materno = reader["apellido_materno"] != DBNull.Value
+                                        ? Convert.ToString(reader["apellido_materno"])
+                                        : null,
+                                    correo_electronico = Convert.ToString(reader["correo_electronico"]),
+                                    telefono = reader["telefono"] != DBNull.Value
+                                        ? Convert.ToString(reader["telefono"])
+                                        : null,
+                                    direccion = reader["direccion"] != DBNull.Value
+                                        ? Convert.ToString(reader["direccion"])
+                                        : null,
+                                    tipo_usuario = Convert.ToString(reader["tipo_usuario"])
+                                };
+
+                                return (true, usuario, "Usuario encontrado");
+                            }
+                            else
+                            {
+                                return (false, null, "Usuario no encontrado");
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return (false, null, $"Error al obtener datos de usuario: {ex.Message}");
+                }
+            }
+        }
+        /// <summary>
+        /// Asignar rol a un usuario
+        /// </summary>
+        /// <param name="rut">RUT del usuario</param>
+        /// <param name="rol">Rol a asignar</param>
+        /// <returns>Resultado de la asignación de rol</returns>
+        public (bool Exito, string Mensaje) AsignarRolUsuario(int rut, string rol)
+        {
+            // Validar que el rol sea uno de los permitidos
+            string[] rolesValidos = { "Vecino", "Socio", "Directiva" };
+            if (!rolesValidos.Contains(rol))
+            {
+                return (false, "Rol inválido. Debe ser Vecino, Socio o Directiva.");
+            }
+
+            using (MySqlConnection conn = new MySqlConnection(_connectionString))
+            {
+                try
+                {
+                    conn.Open();
+                    using (MySqlCommand cmd = new MySqlCommand("SP_ASIGNAR_ROL_USUARIO", conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        // Parámetros del procedimiento almacenado
+                        cmd.Parameters.AddWithValue("@p_rut", rut);
+                        cmd.Parameters.AddWithValue("@p_rol", rol);
+
+                        // Parámetro de salida para el mensaje
+                        MySqlParameter msgParam = new MySqlParameter("@p_mensaje", MySqlDbType.VarChar, 255);
+                        msgParam.Direction = ParameterDirection.Output;
+                        cmd.Parameters.Add(msgParam);
+
+                        // Ejecutar el comando
+                        cmd.ExecuteNonQuery();
+
+                        // Obtener el mensaje de salida
+                        string mensaje = msgParam.Value?.ToString() ?? "";
+
+                        return (mensaje == "OK", mensaje);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return (false, $"Error al asignar rol: {ex.Message}");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Eliminar un usuario del sistema
+        /// </summary>
+        /// <param name="rut">RUT del usuario a eliminar</param>
+        /// <returns>Resultado de la eliminación</returns>
+        public (bool Exito, string Mensaje) EliminarUsuario(int rut)
+        {
+            using (MySqlConnection conn = new MySqlConnection(_connectionString))
+            {
+                try
+                {
+                    conn.Open();
+                    using (MySqlCommand cmd = new MySqlCommand("SP_ELIMINAR_USUARIO", conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        // Parámetros del procedimiento almacenado
+                        cmd.Parameters.AddWithValue("@p_rut", rut);
+
+                        // Parámetro de salida para el mensaje
+                        MySqlParameter msgParam = new MySqlParameter("@p_mensaje", MySqlDbType.VarChar, 255);
+                        msgParam.Direction = ParameterDirection.Output;
+                        cmd.Parameters.Add(msgParam);
+
+                        // Ejecutar el comando
+                        cmd.ExecuteNonQuery();
+
+                        // Obtener el mensaje de salida
+                        string mensaje = msgParam.Value?.ToString() ?? "";
+
+                        return (mensaje == "OK", mensaje);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return (false, $"Error al eliminar usuario: {ex.Message}");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Enviar solicitud para convertirse en socio
+        /// </summary>
+        /// <param name="rut">RUT del usuario solicitante</param>
+        /// <param name="rutArchivo">Ruta o identificador del archivo de solicitud</param>
+        /// <returns>Resultado de la solicitud de socio</returns>
+        public (bool Exito, string Mensaje) EnviarSolicitudSocio(int rut, string rutArchivo)
+        {
+            using (MySqlConnection conn = new MySqlConnection(_connectionString))
+            {
+                try
+                {
+                    conn.Open();
+                    using (MySqlCommand cmd = new MySqlCommand("SP_SOLICITAR_MEMBRESIA_SOCIO", conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        // Parámetros del procedimiento almacenado
+                        cmd.Parameters.AddWithValue("@p_rut", rut);
+                        cmd.Parameters.AddWithValue("@p_rut_archivo", rutArchivo);
+
+                        // Parámetro de salida para el mensaje
+                        MySqlParameter msgParam = new MySqlParameter("@p_mensaje", MySqlDbType.VarChar, 255);
+                        msgParam.Direction = ParameterDirection.Output;
+                        cmd.Parameters.Add(msgParam);
+
+                        // Ejecutar el comando
+                        cmd.ExecuteNonQuery();
+
+                        // Obtener el mensaje de salida
+                        string mensaje = msgParam.Value?.ToString() ?? "";
+
+                        return (mensaje == "OK", mensaje);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return (false, $"Error al solicitar membresía de socio: {ex.Message}");
+                }
+            }
+        }
+
     }
 }
