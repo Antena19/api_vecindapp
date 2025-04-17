@@ -608,7 +608,7 @@ namespace REST_VECINDAPP.CapaNegocios
                 try
                 {
                     conn.Open();
-                    using (MySqlCommand cmd = new MySqlCommand("SP_OBTENER_DATOS_USUARIO", conn))
+                    using (MySqlCommand cmd = new MySqlCommand("SP_SELECT_USUARIOS", conn))
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
 

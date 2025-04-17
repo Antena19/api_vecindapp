@@ -2,12 +2,23 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using Microsoft.AspNetCore.Cors;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container - ANTES de builder.Build()
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigin",
+        builder => builder
+            .WithOrigins("http://localhost:8100", "https://tudominio.com",
+                "capacitor://localhost") // URL de tu app Ionic
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .AllowCredentials());
+});
 
 // Configurar Swagger para soportar JWT
 builder.Services.AddSwaggerGen(c =>
@@ -79,7 +90,7 @@ if (app.Environment.IsDevelopment())
         c.DefaultModelsExpandDepth(-1); // Oculta la sección de modelos por defecto
     });
 }
-
+app.UseCors("AllowSpecificOrigin");
 app.UseHttpsRedirection();
 app.UseAuthentication();  // Primero autenticación
 app.UseAuthorization();   // Luego autorización
