@@ -5,6 +5,7 @@ using REST_VECINDAPP.Modelos;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.ComponentModel.DataAnnotations;
+using REST_VECINDAPP.Servicios;
 
 namespace REST_VECINDAPP.Controllers
 {
@@ -16,14 +17,18 @@ namespace REST_VECINDAPP.Controllers
     public class UsuariosController : ControllerBase
     {
         private readonly IConfiguration _config;
+        private readonly cn_Usuarios _cnUsuarios;
+        private readonly IEmailService _emailService;
 
         /// <summary>
         /// Constructor del controlador de usuarios
         /// </summary>
         /// <param name="configuration">Configuración de la aplicación</param>
-        public UsuariosController(IConfiguration configuration)
+        public UsuariosController(IConfiguration configuration, cn_Usuarios cnUsuarios, IEmailService emailService)
         {
             _config = configuration;
+            _emailService = emailService;
+            _cnUsuarios = cnUsuarios;
         }
 
         /// <summary>
@@ -36,7 +41,8 @@ namespace REST_VECINDAPP.Controllers
         [HttpGet]
         public ActionResult<List<Usuario>> Get([FromQuery] int rut = -1)
         {
-            cn_Usuarios cnUsuarios = new cn_Usuarios(_config);
+            var cnUsuarios = _cnUsuarios;
+
             return Ok(cnUsuarios.ListarUsuarios(rut));
         }
 
@@ -60,7 +66,8 @@ namespace REST_VECINDAPP.Controllers
                 });
             }
 
-            cn_Usuarios cnUsuarios = new cn_Usuarios(_config);
+            var cnUsuarios = _cnUsuarios;
+
             var (exito, mensaje) = cnUsuarios.RegistrarUsuario(usuario);
 
             if (exito)
@@ -100,7 +107,8 @@ namespace REST_VECINDAPP.Controllers
                 });
             }
 
-            cn_Usuarios cnUsuarios = new cn_Usuarios(_config);
+            var cnUsuarios = _cnUsuarios;
+
 
             var (exito, mensaje) = cnUsuarios.EnviarSolicitudSocio(
                 solicitudSocio.Rut,
@@ -168,16 +176,17 @@ namespace REST_VECINDAPP.Controllers
                 return BadRequest(new { mensaje = "RUT inválido" });
             }
 
-            cn_Usuarios cnUsuarios = new cn_Usuarios(_config);
-
+            var cnUsuarios = _cnUsuarios;
             var (exito, mensaje) = cnUsuarios.ActualizarDatosUsuario(
                 rut,
                 datosActualizacion.Nombres,
-                datosActualizacion.Apellidos,
+                datosActualizacion.Apellidos,  // Esto se asigna a apellidoPaterno
                 datosActualizacion.CorreoElectronico,
                 datosActualizacion.Telefono,
-                datosActualizacion.Direccion
+                datosActualizacion.Direccion,
+                datosActualizacion.ApellidoMaterno  // Agregar este parámetro
             );
+            Console.WriteLine($"Resultado actualización: exito={exito}, mensaje='{mensaje}'");
 
             if (exito)
             {
@@ -223,6 +232,8 @@ namespace REST_VECINDAPP.Controllers
 
             [StringLength(200, ErrorMessage = "La dirección no puede exceder 200 caracteres")]
             public string Direccion { get; set; }
+
+            public string ApellidoMaterno { get; set; }
         }
 
         /// <summary>
@@ -248,8 +259,7 @@ namespace REST_VECINDAPP.Controllers
                 return BadRequest(new { mensaje = "RUT inválido" });
             }
 
-            cn_Usuarios cnUsuarios = new cn_Usuarios(_config);
-
+            var cnUsuarios = _cnUsuarios;
             var (exito, mensaje) = cnUsuarios.AsignarRolUsuario(
                 rut,
                 rolDto.Rol
@@ -300,8 +310,7 @@ namespace REST_VECINDAPP.Controllers
                 return BadRequest(new { mensaje = "RUT inválido" });
             }
 
-            cn_Usuarios cnUsuarios = new cn_Usuarios(_config);
-
+            var cnUsuarios = _cnUsuarios;
             var (exito, mensaje) = cnUsuarios.EliminarUsuario(rut);
 
             if (exito)
@@ -339,8 +348,7 @@ namespace REST_VECINDAPP.Controllers
         [Authorize]
         public IActionResult ObtenerUsuarioAutenticado()
         {
-            cn_Usuarios cnUsuarios = new cn_Usuarios(_config);
-
+            var cnUsuarios = _cnUsuarios;
             int rutUsuario = ObtenerRutUsuarioAutenticado();
 
             var (exito, usuario, mensaje) = cnUsuarios.ObtenerDatosUsuario(rutUsuario);

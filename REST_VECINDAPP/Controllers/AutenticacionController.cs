@@ -8,30 +8,30 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.ComponentModel.DataAnnotations;
+using REST_VECINDAPP.Servicios;
 
 namespace REST_VECINDAPP.Controllers
 {
-    /// <summary>
     /// Controlador para gestionar la autenticación de usuarios en la aplicación
-    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class AutenticacionController : ControllerBase
     {
         private readonly IConfiguration _config;
+        private readonly IEmailService _emailService;
+        private readonly cn_Usuarios _cnUsuarios;
 
-        /// <summary>
         /// Constructor del controlador de autenticación
-        /// </summary>
         /// <param name="configuration">Configuración de la aplicación</param>
-        public AutenticacionController(IConfiguration configuration)
+        public AutenticacionController(IConfiguration configuration, IEmailService emailService, cn_Usuarios cnUsuarios)
         {
             _config = configuration;
+            _emailService = emailService;
+            _cnUsuarios = cnUsuarios;
+            
         }
 
-        /// <summary>
         /// Modelo para la solicitud de inicio de sesión
-        /// </summary>
         public class LoginRequest
         {
             [Required(ErrorMessage = "El RUT es obligatorio")]
@@ -41,9 +41,7 @@ namespace REST_VECINDAPP.Controllers
             public string? Password { get; set; }
         }
 
-        /// <summary>
         /// Modelo para la solicitud de recuperación de contraseña
-        /// </summary>
         public class RecuperacionClaveRequest
         {
             [Required(ErrorMessage = "El correo electrónico es obligatorio")]
@@ -51,9 +49,7 @@ namespace REST_VECINDAPP.Controllers
             public string? CorreoElectronico { get; set; }
         }
 
-        /// <summary>
         /// Modelo para la confirmación de recuperación de contraseña
-        /// </summary>
         public class ConfirmacionRecuperacionRequest
         {
             [Required(ErrorMessage = "El RUT es obligatorio")]
@@ -70,9 +66,7 @@ namespace REST_VECINDAPP.Controllers
             public string? ConfirmarContrasena { get; set; }
         }
 
-        /// <summary>
         /// Autentica a un usuario y devuelve un token JWT si las credenciales son válidas
-        /// </summary>
         /// <param name="request">Objeto con credenciales de usuario</param>
         /// <returns>Token JWT si las credenciales son válidas</returns>
         [HttpPost("login")]
@@ -97,7 +91,8 @@ namespace REST_VECINDAPP.Controllers
             }
 
             // Usar la capa de negocios para validar las credenciales
-            cn_Usuarios cnUsuarios = new cn_Usuarios(_config);
+            var cnUsuarios = _cnUsuarios;
+
             var (exito, mensaje) = cnUsuarios.IniciarSesion(rut, request.Password);
 
             if (!exito)
@@ -127,7 +122,20 @@ namespace REST_VECINDAPP.Controllers
             var token = tokenHandler.CreateToken(tokenDescriptor);
             var tokenString = tokenHandler.WriteToken(token);
 
-            return Ok(new { token = tokenString });
+            // Después de generar el token, obtener datos del usuario
+            var (datosExito, datosUsuario, _) = cnUsuarios.ObtenerDatosUsuario(rut);
+
+            if (!datosExito || datosUsuario == null)
+            {
+                return Ok(new { token = tokenString }); // Solo devolver token si no se pueden obtener datos
+            }
+
+            // Devolver token y datos del usuario
+            return Ok(new
+            {
+                token = tokenString,
+                usuario = datosUsuario
+            });
         }
 
         /// <summary>
@@ -136,7 +144,7 @@ namespace REST_VECINDAPP.Controllers
         /// <param name="request">Datos para solicitar recuperación de contraseña</param>
         /// <returns>Resultado de la solicitud de recuperación</returns>
         [HttpPost("recuperar-clave")]
-        public IActionResult SolicitarRecuperacionClave([FromBody] RecuperacionClaveRequest request)
+        public async Task<IActionResult> SolicitarRecuperacionClave([FromBody] RecuperacionClaveRequest request)
         {
             // Validar modelo de entrada
             if (!ModelState.IsValid)
@@ -151,12 +159,12 @@ namespace REST_VECINDAPP.Controllers
             }
 
             // Usar la capa de negocios para solicitar recuperación de clave
-            cn_Usuarios cnUsuarios = new cn_Usuarios(_config);
-            var (exito, mensaje) = cnUsuarios.SolicitarRecuperacionClave(request.CorreoElectronico);
+            cn_Usuarios cnUsuarios = new cn_Usuarios(_config, _emailService);
+            var (exito, mensaje, rut) = await cnUsuarios.SolicitarRecuperacionClave(request.CorreoElectronico);
 
             if (exito)
             {
-                return Ok(new { mensaje = "Se ha enviado un correo de recuperación" });
+                return Ok(new { mensaje = "Se ha enviado un correo de recuperación", rut = rut });
             }
             else
             {
@@ -197,7 +205,8 @@ namespace REST_VECINDAPP.Controllers
             }
 
             // Usar la capa de negocios para confirmar recuperación de clave
-            cn_Usuarios cnUsuarios = new cn_Usuarios(_config);
+            var cnUsuarios = _cnUsuarios;
+
             var (exito, mensaje) = cnUsuarios.ConfirmarRecuperacionClave(
                 request.Rut,
                 request.Token,
@@ -217,6 +226,31 @@ namespace REST_VECINDAPP.Controllers
                 }
 
                 return BadRequest(new { mensaje });
+            }
+        }
+
+        // Agregar este nuevo endpoint de prueba
+        [HttpGet("test/{rut}")]
+        public IActionResult TestUsuario(int rut)
+        {
+            try
+            {
+                var (exito, usuario, mensaje) = _cnUsuarios.ObtenerDatosUsuario(rut);
+
+                return Ok(new
+                {
+                    exito = exito,
+                    usuario = usuario,
+                    mensaje = mensaje
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    error = ex.Message,
+                    stack = ex.StackTrace
+                });
             }
         }
     }

@@ -99,6 +99,29 @@
         }
       }
     },
+    "/api/Autenticacion/test/{rut}": {
+      "get": {
+        "tags": [
+          "Autenticacion"
+        ],
+        "parameters": [
+          {
+            "name": "rut",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Socios": {
       "get": {
         "tags": [
@@ -450,6 +473,10 @@
           "direccion": {
             "maxLength": 200,
             "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "apellidoMaterno": {
             "type": "string",
             "nullable": true
           }

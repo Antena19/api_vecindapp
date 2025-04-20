@@ -48,6 +48,22 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "REST_VECINDAPP.Controllers.AutenticacionController",
+    "Method": "TestUsuario",
+    "RelativePath": "api/Autenticacion/test/{rut}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "rut",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "REST_VECINDAPP.Controllers.SociosController",
     "Method": "Get",
     "RelativePath": "api/Socios",

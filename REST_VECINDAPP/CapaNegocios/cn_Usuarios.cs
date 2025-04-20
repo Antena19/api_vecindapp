@@ -4,6 +4,8 @@ using System.Data;            // Importa System.Data para trabajar con bases de 
 using System.Text.RegularExpressions;
 using System.Security.Cryptography;
 using System.Text;
+using REST_VECINDAPP.Servicios;
+
 
 namespace REST_VECINDAPP.CapaNegocios
 {
@@ -12,13 +14,16 @@ namespace REST_VECINDAPP.CapaNegocios
     {
         // Variable para almacenar la cadena de conexión a la base de datos
         private readonly string _connectionString;
+        private readonly IEmailService _emailService;
+
 
         // Constructor que recibe la configuración de la aplicación
         // Obtiene la cadena de conexión desde appsettings.json
-        public cn_Usuarios(IConfiguration configuration)
+        public cn_Usuarios(IConfiguration configuration, IEmailService emailService)
         {
             _connectionString = configuration.GetConnectionString("DefaultConnection")
                 ?? throw new ArgumentException("La cadena de conexión 'DefaultConnection' no está configurada.");
+            _emailService = emailService;
         }
 
         /// <summary>
@@ -363,12 +368,12 @@ namespace REST_VECINDAPP.CapaNegocios
         /// </summary>
         /// <param name="correoElectronico">Correo electrónico del usuario</param>
         /// <returns>Resultado de la solicitud de recuperación</returns>
-        public (bool Exito, string Mensaje) SolicitarRecuperacionClave(string correoElectronico)
+        public async Task<(bool Exito, string Mensaje, int Rut)> SolicitarRecuperacionClave(string correoElectronico)
         {
             // Validar formato de correo electrónico
             if (!ValidarCorreoElectronico(correoElectronico))
             {
-                return (false, "El correo electrónico no tiene un formato válido.");
+                return (false, "El correo electrónico no tiene un formato válido.",0);
             }
 
             using (MySqlConnection conn = new MySqlConnection(_connectionString))
@@ -376,30 +381,80 @@ namespace REST_VECINDAPP.CapaNegocios
                 try
                 {
                     conn.Open();
-                    using (MySqlCommand cmd = new MySqlCommand("SP_SOLICITAR_RECUPERACION_CLAVE", conn))
+
+                    // Primero, obtener el RUT asociado al correo
+                    int rut = 0;
+                    using (MySqlCommand cmdBuscarRut = new MySqlCommand("SELECT rut FROM usuarios WHERE correo_electronico = @p_correo_electronico", conn))
+                    {
+                        cmdBuscarRut.Parameters.AddWithValue("@p_correo_electronico", correoElectronico);
+                        object resultado = cmdBuscarRut.ExecuteScalar();
+
+                        if (resultado == null || resultado == DBNull.Value)
+                        {
+                            return (false, "Correo electrónico no encontrado.", 0);
+                        }
+
+                        rut = Convert.ToInt32(resultado);
+                    }
+                    // Ahora, llamar al procedimiento SP_GENERAR_TOKEN_RECUPERACION
+                    using (MySqlCommand cmd = new MySqlCommand("SP_GENERAR_TOKEN_RECUPERACION", conn))
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
 
                         // Parámetros del procedimiento almacenado
+                        cmd.Parameters.AddWithValue("@p_rut", rut);
                         cmd.Parameters.AddWithValue("@p_correo_electronico", correoElectronico);
 
-                        // Parámetro de salida para el mensaje
-                        MySqlParameter msgParam = new MySqlParameter("@p_mensaje", MySqlDbType.VarChar, 255);
-                        msgParam.Direction = ParameterDirection.Output;
-                        cmd.Parameters.Add(msgParam);
+                        // Ejecutar y obtener resultado
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                string token = reader["token"].ToString();
 
-                        // Ejecutar el comando
-                        cmd.ExecuteNonQuery();
+                                // Preparar mensaje de correo
+                                string subject = "Recuperación de contraseña - VecindApp";
+                                string htmlBody = $@"
+                                <html>
+                                <body>
+                                    <h2>Recuperación de contraseña</h2>
+                                    <p>Hola,</p>
+                                    <p>Has solicitado un código para restablecer tu contraseña en VecindApp.</p>
+                                    <p>Tu código de recuperación es: <strong>{token}</strong></p>
+                                    <p>Este código expirará en 1 hora.</p>
+                                    <p>Si no has solicitado este cambio, puedes ignorar este correo.</p>
+                                    <p>Saludos,<br>El equipo de VecindApp</p>
+                                </body>
+                                </html>";
 
-                        // Obtener el mensaje de salida
-                        string mensaje = msgParam.Value?.ToString() ?? "";
+                                // Enviar correo
+                                bool emailSent = await _emailService.SendEmailAsync(correoElectronico, subject, htmlBody);
 
-                        return (mensaje == "OK", mensaje);
+                                if (emailSent)
+                                    return (true, "Se ha enviado un correo con el código de recuperación", rut);
+                                else
+                                    return (false, "Error al enviar correo de recuperación", 0);
+
+                             
+                            }
+                            else
+                            {
+                                return (false, "Error al generar token de recuperación.", 0);
+                            }
+                        }
                     }
+                }
+                catch (MySqlException ex)
+                {
+                    if (ex.Message.Contains("Correo electrónico no coincide"))
+                    {
+                        return (false, "El correo electrónico no coincide con el RUT registrado.", 0);
+                    }
+                    return (false, $"Error al solicitar recuperación de clave: {ex.Message}", 0);
                 }
                 catch (Exception ex)
                 {
-                    return (false, $"Error al solicitar recuperación de clave: {ex.Message}");
+                    return (false, $"Error al solicitar recuperación de clave: {ex.Message}", 0);
                 }
             }
         }
@@ -427,28 +482,28 @@ namespace REST_VECINDAPP.CapaNegocios
                 try
                 {
                     conn.Open();
-                    using (MySqlCommand cmd = new MySqlCommand("SP_CONFIRMAR_RECUPERACION_CLAVE", conn))
+                    using (MySqlCommand cmd = new MySqlCommand("SP_RESTABLECER_CONTRASENA", conn))
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
 
                         // Parámetros del procedimiento almacenado
                         cmd.Parameters.AddWithValue("@p_rut", rut);
                         cmd.Parameters.AddWithValue("@p_token", token);
-                        cmd.Parameters.AddWithValue("@p_nueva_contrasena", nuevaContrasenaHash);
-
-                        // Parámetro de salida para el mensaje
-                        MySqlParameter msgParam = new MySqlParameter("@p_mensaje", MySqlDbType.VarChar, 255);
-                        msgParam.Direction = ParameterDirection.Output;
-                        cmd.Parameters.Add(msgParam);
+                        cmd.Parameters.AddWithValue("@p_nueva_password", nuevaContrasenaHash);
 
                         // Ejecutar el comando
                         cmd.ExecuteNonQuery();
 
-                        // Obtener el mensaje de salida
-                        string mensaje = msgParam.Value?.ToString() ?? "";
-
-                        return (mensaje == "OK", mensaje);
+                        return (true, "Contraseña restablecida exitosamente");
                     }
+                }
+                catch (MySqlException ex)
+                {
+                    if (ex.Message.Contains("Token inválido") || ex.Message.Contains("expirado"))
+                    {
+                        return (false, "El token de recuperación es inválido o ha expirado.");
+                    }
+                    return (false, $"Error al confirmar recuperación de clave: {ex.Message}");
                 }
                 catch (Exception ex)
                 {
