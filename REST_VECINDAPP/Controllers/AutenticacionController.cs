@@ -66,7 +66,9 @@ namespace REST_VECINDAPP.Controllers
             public string? ConfirmarContrasena { get; set; }
         }
 
+        /// <summary>
         /// Autentica a un usuario y devuelve un token JWT si las credenciales son válidas
+        /// </summary>
         /// <param name="request">Objeto con credenciales de usuario</param>
         /// <returns>Token JWT si las credenciales son válidas</returns>
         [HttpPost("login")]
@@ -92,12 +94,23 @@ namespace REST_VECINDAPP.Controllers
 
             // Usar la capa de negocios para validar las credenciales
             var cnUsuarios = _cnUsuarios;
-
             var (exito, mensaje) = cnUsuarios.IniciarSesion(rut, request.Password);
 
             if (!exito)
             {
                 return Unauthorized(new { message = mensaje });
+            }
+
+            // Obtener datos del usuario para obtener su tipo (rol)
+            var (datosExito, datosUsuario, _) = cnUsuarios.ObtenerDatosUsuario(rut);
+
+            // Definir el rol predeterminado como "vecino" si no se puede obtener el tipo
+            string tipoUsuario = "vecino";
+
+            // Si tenemos datos del usuario, usamos su tipo real
+            if (datosExito && datosUsuario != null && !string.IsNullOrEmpty(datosUsuario.tipo_usuario))
+            {
+                tipoUsuario = datosUsuario.tipo_usuario;
             }
 
             // Crear token JWT
@@ -108,10 +121,10 @@ namespace REST_VECINDAPP.Controllers
             {
                 Subject = new ClaimsIdentity(new[]
                 {
-                    new Claim(ClaimTypes.Name, request.Username),
-                    new Claim("Rut", rut.ToString()), // Agregar RUT como claim
-                    new Claim(ClaimTypes.Role, "Usuario") // Puedes ajustar esto según el rol del usuario
-                }),
+            new Claim(ClaimTypes.Name, request.Username),
+            new Claim("Rut", rut.ToString()), // Agregar RUT como claim
+            new Claim(ClaimTypes.Role, tipoUsuario) // Usar el tipo real del usuario
+        }),
                 Expires = DateTime.UtcNow.AddHours(1), // Expira en 1 hora
                 Issuer = _config["Jwt:Issuer"],
                 Audience = _config["Jwt:Audience"],
@@ -122,9 +135,7 @@ namespace REST_VECINDAPP.Controllers
             var token = tokenHandler.CreateToken(tokenDescriptor);
             var tokenString = tokenHandler.WriteToken(token);
 
-            // Después de generar el token, obtener datos del usuario
-            var (datosExito, datosUsuario, _) = cnUsuarios.ObtenerDatosUsuario(rut);
-
+            // Si no tenemos datos del usuario (aunque ya los obtuvimos antes, por consistencia mantenemos esta parte)
             if (!datosExito || datosUsuario == null)
             {
                 return Ok(new { token = tokenString }); // Solo devolver token si no se pueden obtener datos

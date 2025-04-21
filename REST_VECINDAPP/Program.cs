@@ -80,6 +80,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 builder.Services.AddAuthorization();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<REST_VECINDAPP.Seguridad.VerificadorRoles>();
 
 // Construir la aplicación
 var app = builder.Build();
