@@ -171,6 +171,138 @@
         }
       }
     },
+    "/api/Socios/solicitar": {
+      "post": {
+        "tags": [
+          "Socios"
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "Rut": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "DocumentoIdentidad": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "DocumentoDomicilio": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "Rut": {
+                  "style": "form"
+                },
+                "DocumentoIdentidad": {
+                  "style": "form"
+                },
+                "DocumentoDomicilio": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Socios/solicitudes": {
+      "get": {
+        "tags": [
+          "Socios"
+        ],
+        "parameters": [
+          {
+            "name": "estado",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Socios/aprobar/{rut}": {
+      "put": {
+        "tags": [
+          "Socios"
+        ],
+        "parameters": [
+          {
+            "name": "rut",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Socios/rechazar/{rut}": {
+      "put": {
+        "tags": [
+          "Socios"
+        ],
+        "parameters": [
+          {
+            "name": "rut",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RechazoDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RechazoDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/RechazoDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Usuarios": {
       "get": {
         "tags": [
@@ -526,6 +658,16 @@
           "password": {
             "minLength": 1,
             "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "RechazoDTO": {
+        "type": "object",
+        "properties": {
+          "motivoRechazo": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false

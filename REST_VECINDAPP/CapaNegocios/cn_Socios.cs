@@ -1,6 +1,7 @@
 ﻿using MySqlConnector;        // Importa la biblioteca para conectar con MySQL
 using REST_VECINDAPP.Modelos; // Importa los modelos de la aplicación
 using System.Data;           // Importa System.Data para trabajar con bases de datos
+using REST_VECINDAPP.Modelos.DTOs;
 
 namespace REST_VECINDAPP.CapaNegocios
 {
@@ -105,6 +106,159 @@ namespace REST_VECINDAPP.CapaNegocios
 
             // Devuelve la lista de socios
             return Socios;
+        }
+
+        /// <summary>
+        /// Método para solicitar membresía como socio
+        /// </summary>
+        /// <param name="rut">RUT del vecino que solicita</param>
+        /// <param name="documentoIdentidad">Imagen del documento de identidad</param>
+        /// <param name="documentoDomicilio">Comprobante de domicilio</param>
+        /// <returns>Mensaje de resultado</returns>
+        public string SolicitarMembresia(int rut, byte[] documentoIdentidad, byte[] documentoDomicilio)
+        {
+            string mensaje = string.Empty;
+
+            using (MySqlConnection conn = new MySqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                using (MySqlCommand cmd = new MySqlCommand("SP_SOLICITAR_MEMBRESIA_SOCIO", conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.AddWithValue("@p_rut", rut);
+                    cmd.Parameters.AddWithValue("@p_documento_identidad", documentoIdentidad);
+                    cmd.Parameters.AddWithValue("@p_documento_domicilio", documentoDomicilio);
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            mensaje = reader["mensaje"].ToString();
+                        }
+                    }
+                }
+
+                conn.Close();
+            }
+
+            return mensaje;
+        }
+
+        /// <summary>
+        /// Método para obtener las solicitudes de socios
+        /// </summary>
+        /// <param name="estadoSolicitud">Estado de solicitud a filtrar (pendiente, aprobada, rechazada). Si es null, trae todas</param>
+        /// <returns>Lista de solicitudes con datos del usuario</returns>
+        public List<SolicitudSocioDTO> ConsultarSolicitudes(string estadoSolicitud = null)
+        {
+            List<SolicitudSocioDTO> solicitudes = new List<SolicitudSocioDTO>();
+
+            using (MySqlConnection conn = new MySqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                using (MySqlCommand cmd = new MySqlCommand("SP_CONSULTAR_SOLICITUDES_SOCIOS", conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.AddWithValue("@p_estado_solicitud", estadoSolicitud ?? "");
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            SolicitudSocioDTO solicitud = new SolicitudSocioDTO
+                            {
+                                Rut = Convert.ToInt32(reader["rut"]),
+                                Nombre = reader["nombre"].ToString(),
+                                ApellidoPaterno = reader["apellido_paterno"].ToString(),
+                                ApellidoMaterno = reader["apellido_materno"].ToString(),
+                                FechaSolicitud = Convert.ToDateTime(reader["fecha_solicitud"]),
+                                EstadoSolicitud = reader["estado_solicitud"].ToString(),
+                                MotivoRechazo = reader["motivo_rechazo"].ToString()
+                            };
+
+                            solicitudes.Add(solicitud);
+                        }
+                    }
+                }
+
+                conn.Close();
+            }
+
+            return solicitudes;
+        }
+
+        /// <summary>
+        /// Método para aprobar una solicitud de socio
+        /// </summary>
+        /// <param name="rut">RUT del solicitante</param>
+        /// <returns>Mensaje de resultado</returns>
+        public string AprobarSolicitud(int rut)
+        {
+            string mensaje = string.Empty;
+
+            using (MySqlConnection conn = new MySqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                using (MySqlCommand cmd = new MySqlCommand("SP_APROBAR_SOLICITUD_SOCIO", conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.AddWithValue("@p_rut", rut);
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            mensaje = reader["mensaje"].ToString();
+                        }
+                    }
+                }
+
+                conn.Close();
+            }
+
+            return mensaje;
+        }
+
+        /// <summary>
+        /// Método para rechazar una solicitud de socio
+        /// </summary>
+        /// <param name="rut">RUT del solicitante</param>
+        /// <param name="motivoRechazo">Motivo del rechazo</param>
+        /// <returns>Mensaje de resultado</returns>
+        public string RechazarSolicitud(int rut, string motivoRechazo)
+        {
+            string mensaje = string.Empty;
+
+            using (MySqlConnection conn = new MySqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                using (MySqlCommand cmd = new MySqlCommand("SP_RECHAZAR_SOLICITUD_SOCIO", conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.AddWithValue("@p_rut", rut);
+                    cmd.Parameters.AddWithValue("@p_motivo_rechazo", motivoRechazo);
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            mensaje = reader["mensaje"].ToString();
+                        }
+                    }
+                }
+
+                conn.Close();
+            }
+
+            return mensaje;
         }
     }
 }
