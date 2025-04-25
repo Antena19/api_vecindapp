@@ -841,5 +841,73 @@ namespace REST_VECINDAPP.CapaNegocios
             }
         }
 
+        /// <summary>
+        /// Recuperar contraseña de forma simple usando RUT y nombre completo
+        /// </summary>
+        /// <param name="rut">RUT del usuario</param>
+        /// <param name="nombreCompleto">Nombre completo del usuario (nombre y apellidos)</param>
+        /// <param name="nuevaContrasena">Nueva contraseña</param>
+        /// <returns>Resultado de la recuperación</returns>
+        public (bool Exito, string Mensaje) RecuperarClaveSimple(int rut, string nombreCompleto, string nuevaContrasena)
+        {
+            // Validar complejidad de la nueva contraseña
+            if (!ValidarComplejidadContraseña(nuevaContrasena))
+            {
+                return (false, "La nueva contraseña no cumple con los requisitos de complejidad.");
+            }
+
+            // Hashear la nueva contraseña
+            string nuevaContrasenaHash = HashearContraseña(nuevaContrasena);
+
+            using (MySqlConnection conn = new MySqlConnection(_connectionString))
+            {
+                try
+                {
+                    conn.Open();
+
+                    using (MySqlCommand cmd = new MySqlCommand("SP_RECUPERAR_CONTRASENA_SIMPLE", conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        // Parámetros del procedimiento almacenado
+                        cmd.Parameters.AddWithValue("@p_rut", rut);
+                        cmd.Parameters.AddWithValue("@p_nombre_completo", nombreCompleto);
+                        cmd.Parameters.AddWithValue("@p_nueva_password", nuevaContrasenaHash);
+
+                        // Ejecutar el procedimiento
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                string mensaje = reader["mensaje"].ToString();
+                                return (true, mensaje);
+                            }
+                            else
+                            {
+                                return (false, "Error al procesar la solicitud de recuperación");
+                            }
+                        }
+                    }
+                }
+                catch (MySqlException ex)
+                {
+                    // Manejar errores específicos del procedimiento almacenado
+                    if (ex.Message.Contains("Usuario no encontrado"))
+                    {
+                        return (false, "Usuario no encontrado");
+                    }
+                    if (ex.Message.Contains("nombre completo no coincide"))
+                    {
+                        return (false, "El nombre completo no coincide con el registrado para este RUT");
+                    }
+                    return (false, $"Error al recuperar contraseña: {ex.Message}");
+                }
+                catch (Exception ex)
+                {
+                    return (false, $"Error al recuperar contraseña: {ex.Message}");
+                }
+            }
+        }
+
     }
 }

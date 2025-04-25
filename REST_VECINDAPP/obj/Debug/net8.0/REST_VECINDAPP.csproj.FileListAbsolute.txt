@@ -245,3 +245,7 @@ C:\api_vecindapp\REST_VECINDAPP\bin\Debug\net8.0\MailKit.dll
 C:\api_vecindapp\REST_VECINDAPP\bin\Debug\net8.0\MimeKit.dll
 C:\api_vecindapp\REST_VECINDAPP\bin\Debug\net8.0\System.Security.Cryptography.Pkcs.dll
 C:\api_vecindapp\REST_VECINDAPP\bin\Debug\net8.0\runtimes\win\lib\net8.0\System.Security.Cryptography.Pkcs.dll
+C:\Users\alann\OneDrive\Documentos\code\Angie\api_vecindapp\REST_VECINDAPP\bin\Debug\net8.0\MailKit.dll
+C:\Users\alann\OneDrive\Documentos\code\Angie\api_vecindapp\REST_VECINDAPP\bin\Debug\net8.0\MimeKit.dll
+C:\Users\alann\OneDrive\Documentos\code\Angie\api_vecindapp\REST_VECINDAPP\bin\Debug\net8.0\System.Security.Cryptography.Pkcs.dll
+C:\Users\alann\OneDrive\Documentos\code\Angie\api_vecindapp\REST_VECINDAPP\bin\Debug\net8.0\runtimes\win\lib\net8.0\System.Security.Cryptography.Pkcs.dll

@@ -49,6 +49,22 @@
   },
   {
     "ContainingType": "REST_VECINDAPP.Controllers.AutenticacionController",
+    "Method": "RecuperarClaveSimple",
+    "RelativePath": "api/Autenticacion/recuperar-clave-simple",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "RecuperacionSimpleRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "REST_VECINDAPP.Controllers.AutenticacionController",
     "Method": "TestUsuario",
     "RelativePath": "api/Autenticacion/test/{rut}",
     "HttpMethod": "GET",
