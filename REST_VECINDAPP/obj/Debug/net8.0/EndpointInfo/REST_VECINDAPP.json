@@ -122,6 +122,37 @@
         }
       }
     },
+    "/api/Autenticacion/recuperar-clave-simple": {
+      "post": {
+        "tags": [
+          "Autenticacion"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RecuperacionSimpleRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RecuperacionSimpleRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/RecuperacionSimpleRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Socios": {
       "get": {
         "tags": [
@@ -682,6 +713,35 @@
             "minLength": 1,
             "type": "string",
             "format": "email"
+          }
+        },
+        "additionalProperties": false
+      },
+      "RecuperacionSimpleRequest": {
+        "required": [
+          "confirmarContrasena",
+          "nombreCompleto",
+          "nuevaContrasena",
+          "rut"
+        ],
+        "type": "object",
+        "properties": {
+          "rut": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nombreCompleto": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "nuevaContrasena": {
+            "maxLength": 100,
+            "minLength": 8,
+            "type": "string"
+          },
+          "confirmarContrasena": {
+            "minLength": 1,
+            "type": "string"
           }
         },
         "additionalProperties": false

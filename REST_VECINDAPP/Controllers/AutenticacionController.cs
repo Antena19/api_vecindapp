@@ -264,5 +264,49 @@ namespace REST_VECINDAPP.Controllers
                 });
             }
         }
+        /// <summary>
+        /// Endpoint para recuperación simple de contraseña usando RUT y nombre completo
+        /// </summary>
+        /// <param name="request">Datos para recuperación de contraseña</param>
+        /// <returns>Resultado de la recuperación de contraseña</returns>
+        [HttpPost("recuperar-clave-simple")]
+        public IActionResult RecuperarClaveSimple([FromBody] RecuperacionSimpleRequest request)
+        {
+            // Validar modelo de entrada
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new
+                {
+                    mensaje = "Datos de recuperación inválidos",
+                    errores = ModelState.Values
+                        .SelectMany(v => v.Errors)
+                        .Select(e => e.ErrorMessage)
+                });
+            }
+
+            // Usar la capa de negocios para recuperar clave por RUT y nombre completo
+            var cnUsuarios = _cnUsuarios;
+
+            var (exito, mensaje) = cnUsuarios.RecuperarClaveSimple(
+                request.Rut,
+                request.NombreCompleto,
+                request.NuevaContrasena
+            );
+
+            if (exito)
+            {
+                return Ok(new { mensaje = "Contraseña restablecida exitosamente" });
+            }
+            else
+            {
+                // Si los datos no coinciden
+                if (mensaje.Contains("no encontrado") || mensaje.Contains("no coincide"))
+                {
+                    return Unauthorized(new { mensaje = "Los datos proporcionados no son correctos" });
+                }
+
+                return BadRequest(new { mensaje });
+            }
+        }
     }
 }
