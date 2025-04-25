@@ -511,7 +511,7 @@ CREATE TABLE `usuarios` (
 
 LOCK TABLES `usuarios` WRITE;
 /*!40000 ALTER TABLE `usuarios` DISABLE KEYS */;
-INSERT INTO `usuarios` VALUES (11987654,'3','Juan','Tapia','Flores','juan.tapia@gmail.com','56954321098','Pasaje Los Naranjos 567, Portal Puerto Montt','$2a$10$X7VF.EPitdGT9lMp4VKCQOQVkfL6K7AGszw3sGGDOztSsgbac2Joa','2023-02-10',1,'vecino',NULL,NULL),(12345987,'6','Pedro','López','Rojas','pedro.lopez@gmail.com','56965432109','Calle Las Violetas 234, Portal Puerto Montt','$2a$10$LcZI1UrGmcZKVqm5HOZ.g.YG6WyHjt5e6hcwfcBFwKrnuHohFZDTC','2023-02-05',1,'socio',NULL,NULL),(13456789,'0','Miguel','Torres','Díaz','miguel.torres@gmail.com','56910987654','Calle Los Cerezos 901, Portal Puerto Montt','$2a$10$X7VF.EPitdGT9lMp4VKCQOQVkfL6K7AGszw3sGGDOztSsgbac2Joa','2023-03-01',1,'vecino',NULL,NULL),(14567890,'1','María','Sánchez','Pérez','maria.sanchez@gmail.com','56987654321','Pasaje Los Aromos 456, Portal Puerto Montt','$2a$10$8cjz/7qHzP5C6aS1wEJ4Xe9KVJ0sFdP5KXW4O8M5KwO2UDjVfVNzO','2023-01-20',1,'directiva',NULL,NULL),(15432789,'8','César','San Martín','Gómez','carlos.martinez@gmail.com','56998765432','Calle Principal 123, Portal Puerto Montt','$2a$10$8cjz/7qHzP5C6aS1wEJ4Xe9KVJ0sFdP5KXW4O8M5KwO2UDjVfVNzO','2023-01-15',1,'directiva',NULL,NULL),(16789456,'2','Ana','González','Vidal','ana.gonzalez@gmail.com','56976543210','Avenida Los Pinos 789, Portal Puerto Montt','$2a$10$8cjz/7qHzP5C6aS1wEJ4Xe9KVJ0sFdP5KXW4O8M5KwO2UDjVfVNzO','2023-01-25',1,'directiva',NULL,NULL),(17144575,'2','Angelina','Mendoza','Yañez','angelina.mendoza.y@gmail.com','+56998555466','Joseph Addison 2342 ','30b62cbe41ff0cd5a6cd8ed2ff4f47d4a152b56e0e79587a3758137f58d2bec8','2025-04-13',1,'directiva','cfd0d89c946588d802cde8fe7a48e6c0','2025-04-19 20:32:06'),(17258237,'0','Hugo','Mayorga','Mendoza','user@example.com','998555466','string','30b62cbe41ff0cd5a6cd8ed2ff4f47d4a152b56e0e79587a3758137f58d2bec8','2025-04-21',1,'vecino',NULL,NULL),(17654321,'5','Carmen','Rodríguez','Silva','carmen.rodriguez@gmail.com','56943210987','Calle Las Acacias 890, Portal Puerto Montt','$2a$10$X7VF.EPitdGT9lMp4VKCQOQVkfL6K7AGszw3sGGDOztSsgbac2Joa','2023-02-15',1,'vecino',NULL,NULL),(18765432,'1','Roberto','Fernández','Muñoz','roberto.fernandez@gmail.com','56932109876','Avenida Principal 345, Portal Puerto Montt','$2a$10$X7VF.EPitdGT9lMp4VKCQOQVkfL6K7AGszw3sGGDOztSsgbac2Joa','2023-02-20',1,'vecino',NULL,NULL),(19876543,'9','Patricia','Gutiérrez','Castro','patricia.gutierrez@gmail.com','56921098765','Pasaje Los Manzanos 678, Portal Puerto Montt','$2a$10$X7VF.EPitdGT9lMp4VKCQOQVkfL6K7AGszw3sGGDOztSsgbac2Joa','2023-02-25',1,'vecino',NULL,NULL),(20987654,'3','Laura','Vargas','Mora','laura.vargas@gmail.com','56909876543','Avenida Los Alamos 234, Portal Puerto Montt','$2a$10$X7VF.EPitdGT9lMp4VKCQOQVkfL6K7AGszw3sGGDOztSsgbac2Joa','2023-03-05',1,'vecino',NULL,NULL),(25592802,'3','Batitú','Mayorga','Mendoza','prueba@gmail.com','+56998555466','prueba','30b62cbe41ff0cd5a6cd8ed2ff4f47d4a152b56e0e79587a3758137f58d2bec8','2025-04-19',1,'vecino',NULL,NULL);
+INSERT INTO `usuarios` VALUES (11987654,'3','Juan','Tapia','Flores','juan.tapia@gmail.com','56954321098','Pasaje Los Naranjos 567, Portal Puerto Montt','$2a$10$X7VF.EPitdGT9lMp4VKCQOQVkfL6K7AGszw3sGGDOztSsgbac2Joa','2023-02-10',1,'vecino',NULL,NULL),(12345987,'6','Pedro','López','Rojas','pedro.lopez@gmail.com','56965432109','Calle Las Violetas 234, Portal Puerto Montt','$2a$10$LcZI1UrGmcZKVqm5HOZ.g.YG6WyHjt5e6hcwfcBFwKrnuHohFZDTC','2023-02-05',1,'socio',NULL,NULL),(13456789,'0','Miguel','Torres','Díaz','miguel.torres@gmail.com','56910987654','Calle Los Cerezos 901, Portal Puerto Montt','$2a$10$X7VF.EPitdGT9lMp4VKCQOQVkfL6K7AGszw3sGGDOztSsgbac2Joa','2023-03-01',1,'vecino',NULL,NULL),(14567890,'1','María','Sánchez','Pérez','maria.sanchez@gmail.com','56987654321','Pasaje Los Aromos 456, Portal Puerto Montt','$2a$10$8cjz/7qHzP5C6aS1wEJ4Xe9KVJ0sFdP5KXW4O8M5KwO2UDjVfVNzO','2023-01-20',1,'directiva',NULL,NULL),(15432789,'8','César','San Martín','Gómez','carlos.martinez@gmail.com','56998765432','Calle Principal 123, Portal Puerto Montt','$2a$10$8cjz/7qHzP5C6aS1wEJ4Xe9KVJ0sFdP5KXW4O8M5KwO2UDjVfVNzO','2023-01-15',1,'directiva',NULL,NULL),(16789456,'2','Ana','González','Vidal','ana.gonzalez@gmail.com','56976543210','Avenida Los Pinos 789, Portal Puerto Montt','$2a$10$8cjz/7qHzP5C6aS1wEJ4Xe9KVJ0sFdP5KXW4O8M5KwO2UDjVfVNzO','2023-01-25',1,'directiva',NULL,NULL),(17144575,'2','Angelina','Mendoza','Yañez','angelina.mendoza.y@gmail.com','+56998555466','Joseph Addison 2342 ','30b62cbe41ff0cd5a6cd8ed2ff4f47d4a152b56e0e79587a3758137f58d2bec8','2025-04-13',1,'directiva','cfd0d89c946588d802cde8fe7a48e6c0','2025-04-19 20:32:06'),(17258237,'0','Hugo','Mayorga','Mendoza','user@example.com','998555466','string','DELETED','2025-04-21',0,'vecino',NULL,NULL),(17654321,'5','Carmen','Rodríguez','Silva','carmen.rodriguez@gmail.com','56943210987','Calle Las Acacias 890, Portal Puerto Montt','$2a$10$X7VF.EPitdGT9lMp4VKCQOQVkfL6K7AGszw3sGGDOztSsgbac2Joa','2023-02-15',1,'vecino',NULL,NULL),(18765432,'1','Roberto','Fernández','Muñoz','roberto.fernandez@gmail.com','56932109876','Avenida Principal 345, Portal Puerto Montt','$2a$10$X7VF.EPitdGT9lMp4VKCQOQVkfL6K7AGszw3sGGDOztSsgbac2Joa','2023-02-20',1,'vecino',NULL,NULL),(19876543,'9','Patricia','Gutiérrez','Castro','patricia.gutierrez@gmail.com','56921098765','Pasaje Los Manzanos 678, Portal Puerto Montt','$2a$10$X7VF.EPitdGT9lMp4VKCQOQVkfL6K7AGszw3sGGDOztSsgbac2Joa','2023-02-25',1,'vecino',NULL,NULL),(20987654,'3','Laura','Vargas','Mora','laura.vargas@gmail.com','56909876543','Avenida Los Alamos 234, Portal Puerto Montt','$2a$10$X7VF.EPitdGT9lMp4VKCQOQVkfL6K7AGszw3sGGDOztSsgbac2Joa','2023-03-05',1,'vecino',NULL,NULL),(25592802,'3','Batitú','Mayorga','Mendoza','prueba@gmail.com','+56998555466','prueba','30b62cbe41ff0cd5a6cd8ed2ff4f47d4a152b56e0e79587a3758137f58d2bec8','2025-04-19',1,'vecino',NULL,NULL);
 /*!40000 ALTER TABLE `usuarios` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1095,6 +1095,113 @@ BEGIN
         WHERE s.estado_solicitud = p_estado_solicitud
         ORDER BY s.fecha_solicitud;
     END IF;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `SP_ELIMINAR_USUARIO` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_ELIMINAR_USUARIO`(
+    IN p_rut INT,
+    IN p_rut_solicitante INT,
+    OUT p_mensaje VARCHAR(255)
+)
+proc_label: BEGIN
+    DECLARE usuario_existe INT DEFAULT 0;
+    DECLARE usuario_tipo VARCHAR(10);
+    DECLARE solicitante_tipo VARCHAR(10);
+    DECLARE directiva_count INT;
+    DECLARE tiene_solicitud_pendiente INT DEFAULT 0;
+    DECLARE tiene_certificados_recientes INT DEFAULT 0;
+    
+    -- Verificar si el usuario existe
+    SELECT COUNT(*) INTO usuario_existe
+    FROM usuarios
+    WHERE rut = p_rut;
+    
+    -- Si existe, obtener su tipo de usuario
+    IF usuario_existe > 0 THEN
+        SELECT tipo_usuario INTO usuario_tipo
+        FROM usuarios
+        WHERE rut = p_rut;
+    ELSE
+        SET p_mensaje = 'Usuario no encontrado';
+        LEAVE proc_label;
+    END IF;
+    
+    -- Obtener tipo de usuario del solicitante
+    SELECT COUNT(*) INTO usuario_existe
+    FROM usuarios
+    WHERE rut = p_rut_solicitante;
+    
+    IF usuario_existe > 0 THEN
+        SELECT tipo_usuario INTO solicitante_tipo
+        FROM usuarios
+        WHERE rut = p_rut_solicitante;
+    ELSE
+        SET p_mensaje = 'Usuario solicitante no encontrado';
+        LEAVE proc_label;
+    END IF;
+    
+    -- Verificar permisos de eliminación
+    IF p_rut <> p_rut_solicitante AND solicitante_tipo NOT IN ('administrador', 'directiva') THEN
+        SET p_mensaje = 'No autorizado para eliminar esta cuenta';
+        LEAVE proc_label;
+    END IF;
+    
+    -- Verificar si es el último miembro de la directiva
+    IF usuario_tipo = 'directiva' AND p_rut <> p_rut_solicitante THEN
+        SELECT COUNT(*) INTO directiva_count FROM usuarios WHERE tipo_usuario = 'directiva';
+        
+        IF directiva_count <= 1 THEN
+            SET p_mensaje = 'No se puede eliminar el único miembro de la directiva';
+            LEAVE proc_label;
+        END IF;
+    END IF;
+    
+    -- Verificar dependencias
+    -- 1. Verificar si el usuario tiene solicitudes de certificado pendientes
+    SELECT COUNT(*) INTO tiene_solicitud_pendiente 
+    FROM solicitudes_certificado 
+    WHERE usuario_rut = p_rut AND estado = 'pendiente';
+    
+    IF tiene_solicitud_pendiente > 0 THEN
+        SET p_mensaje = 'No se puede eliminar al usuario porque tiene solicitudes de certificado pendientes';
+        LEAVE proc_label;
+    END IF;
+    
+    -- 2. Verificar si el usuario tiene certificados emitidos recientemente
+    SELECT COUNT(*) INTO tiene_certificados_recientes
+    FROM certificados c
+    JOIN solicitudes_certificado sc ON c.solicitud_id = sc.id
+    WHERE sc.usuario_rut = p_rut 
+    AND c.fecha_emision > DATE_SUB(NOW(), INTERVAL 3 MONTH)
+    AND c.estado = 'vigente';
+    
+    IF tiene_certificados_recientes > 0 THEN
+        SET p_mensaje = 'No se puede eliminar al usuario porque tiene certificados vigentes';
+        LEAVE proc_label;
+    END IF;
+    
+    -- Si llegamos aquí, procedemos con la eliminación
+    UPDATE usuarios 
+    SET estado = 0,
+        password = 'DELETED',  -- Usar un valor fijo en lugar de NULL
+        token_recuperacion = NULL,
+        fecha_token_recuperacion = NULL
+    WHERE rut = p_rut;
+    
+    SET p_mensaje = 'OK';
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1695,6 +1802,95 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `SP_REGISTRAR_USUARIO_EXISTENTE` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_REGISTRAR_USUARIO_EXISTENTE`(
+    IN p_rut INT,
+    IN p_dv_rut CHAR(1),
+    IN p_nombre VARCHAR(45),
+    IN p_apellido_paterno VARCHAR(45),
+    IN p_apellido_materno VARCHAR(45),
+    IN p_correo_electronico VARCHAR(45),
+    IN p_telefono VARCHAR(20),
+    IN p_direccion VARCHAR(200),
+    IN p_password VARCHAR(255),
+    OUT p_mensaje VARCHAR(255)
+)
+BEGIN
+    DECLARE usuario_existe INT DEFAULT 0;
+    DECLARE usuario_activo INT DEFAULT 0;
+    
+    -- Verificar si el usuario existe
+    SELECT COUNT(*) INTO usuario_existe FROM usuarios WHERE rut = p_rut;
+    
+    -- Verificar si el usuario está activo
+    SELECT COUNT(*) INTO usuario_activo FROM usuarios WHERE rut = p_rut AND estado = 1;
+    
+    -- Si el usuario está activo, no permitir un nuevo registro
+    IF usuario_activo > 0 THEN
+        SET p_mensaje = 'El RUT ya está registrado como usuario activo en el sistema';
+    -- Si el usuario existe pero está inactivo, reactivarlo
+    ELSEIF usuario_existe > 0 THEN
+        -- Comprobar si el correo ya está siendo usado por otro usuario activo
+        IF EXISTS (SELECT 1 FROM usuarios WHERE correo_electronico = p_correo_electronico AND rut != p_rut AND estado = 1) THEN
+            SET p_mensaje = 'El correo electrónico ya está registrado por otro usuario activo';
+        ELSE
+            -- Actualizar datos del usuario y reactivarlo
+            UPDATE usuarios 
+            SET dv_rut = p_dv_rut,
+                nombre = p_nombre,
+                apellido_paterno = p_apellido_paterno,
+                apellido_materno = p_apellido_materno,
+                correo_electronico = p_correo_electronico,
+                telefono = p_telefono,
+                direccion = p_direccion,
+                password = p_password,
+                fecha_registro = CURRENT_DATE,
+                estado = 1,
+                tipo_usuario = 'vecino' -- Por defecto, reingresa como vecino
+            WHERE rut = p_rut;
+            
+            -- Si era socio antes, verificar y restaurar si es posible
+            IF EXISTS (SELECT 1 FROM socios WHERE rut = p_rut AND estado_solicitud = 'aprobada') THEN
+                -- Restaurar estado de socio si estaba aprobado previamente
+                UPDATE socios SET estado = 1 WHERE rut = p_rut AND estado_solicitud = 'aprobada';
+                
+                -- Actualizar tipo de usuario a socio
+                UPDATE usuarios SET tipo_usuario = 'socio' WHERE rut = p_rut;
+            END IF;
+            
+            SET p_mensaje = 'Usuario reactivado exitosamente';
+        END IF;
+    ELSE
+        -- Es un usuario completamente nuevo, usar el procedimiento estándar de registro
+        CALL SP_REGISTRAR_USUARIOS(
+            p_rut,
+            p_dv_rut,
+            p_nombre,
+            p_apellido_paterno,
+            p_apellido_materno,
+            p_correo_electronico,
+            p_telefono,
+            p_direccion,
+            p_password
+        );
+        
+        SET p_mensaje = 'Usuario registrado exitosamente';
+    END IF;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `SP_RESTABLECER_CONTRASENA` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -2015,4 +2211,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-04-21 16:57:27
+-- Dump completed on 2025-04-25 11:59:54

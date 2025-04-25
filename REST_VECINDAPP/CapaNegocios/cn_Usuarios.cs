@@ -763,8 +763,9 @@ namespace REST_VECINDAPP.CapaNegocios
         /// Eliminar un usuario del sistema
         /// </summary>
         /// <param name="rut">RUT del usuario a eliminar</param>
+        /// <param name="rutSolicitante">RUT del usuario que solicita la eliminación</param>
         /// <returns>Resultado de la eliminación</returns>
-        public (bool Exito, string Mensaje) EliminarUsuario(int rut)
+        public (bool Exito, string Mensaje) EliminarUsuario(int rut, int rutSolicitante)
         {
             using (MySqlConnection conn = new MySqlConnection(_connectionString))
             {
@@ -774,9 +775,9 @@ namespace REST_VECINDAPP.CapaNegocios
                     using (MySqlCommand cmd = new MySqlCommand("SP_ELIMINAR_USUARIO", conn))
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
-
                         // Parámetros del procedimiento almacenado
                         cmd.Parameters.AddWithValue("@p_rut", rut);
+                        cmd.Parameters.AddWithValue("@p_rut_solicitante", rutSolicitante);
 
                         // Parámetro de salida para el mensaje
                         MySqlParameter msgParam = new MySqlParameter("@p_mensaje", MySqlDbType.VarChar, 255);
@@ -788,7 +789,6 @@ namespace REST_VECINDAPP.CapaNegocios
 
                         // Obtener el mensaje de salida
                         string mensaje = msgParam.Value?.ToString() ?? "";
-
                         return (mensaje == "OK", mensaje);
                     }
                 }

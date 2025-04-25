@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.ComponentModel.DataAnnotations;
 using REST_VECINDAPP.Servicios;
+using System.Security.Claims;
 
 namespace REST_VECINDAPP.Controllers
 {
@@ -310,8 +311,20 @@ namespace REST_VECINDAPP.Controllers
                 return BadRequest(new { mensaje = "RUT inválido" });
             }
 
+            // Obtener el RUT del usuario autenticado desde el token JWT
+            int rutSolicitante;
+
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier) ?? User.FindFirst("rut") ?? User.FindFirst("sub");
+
+            if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out rutSolicitante))
+            {
+                // Como alternativa, podríamos usar el mismo RUT que se está intentando eliminar
+                // Esto permitiría al usuario eliminar su propia cuenta
+                rutSolicitante = rut;
+            }
+
             var cnUsuarios = _cnUsuarios;
-            var (exito, mensaje) = cnUsuarios.EliminarUsuario(rut);
+            var (exito, mensaje) = cnUsuarios.EliminarUsuario(rut, rutSolicitante);
 
             if (exito)
             {
@@ -326,21 +339,17 @@ namespace REST_VECINDAPP.Controllers
                 {
                     return NotFound(new { mensaje });
                 }
-
-                if (mensaje.Contains("no autorizado"))
+                if (mensaje.Contains("No autorizado"))
                 {
                     return Unauthorized(new { mensaje });
                 }
-
-                if (mensaje.Contains("no se puede eliminar"))
+                if (mensaje.Contains("No se puede eliminar"))
                 {
                     return Conflict(new { mensaje });
                 }
-
                 return BadRequest(new { mensaje });
             }
         }
-
         /// <summary>
         /// Obtener información del usuario autenticado
         /// </summary>
