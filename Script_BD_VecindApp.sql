@@ -66,7 +66,7 @@ CREATE TABLE `configuraciones` (
   UNIQUE KEY `clave_UNIQUE` (`clave`),
   KEY `modificado_por_idx` (`modificado_por`),
   CONSTRAINT `modificado_por_fk` FOREIGN KEY (`modificado_por`) REFERENCES `usuarios` (`rut`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -102,7 +102,7 @@ CREATE TABLE `cuotas_socio` (
   CONSTRAINT `idsocio_fk` FOREIGN KEY (`idsocio`) REFERENCES `socios` (`idsocio`),
   CONSTRAINT `pago_id_fk` FOREIGN KEY (`pago_id`) REFERENCES `pagos` (`id`),
   CONSTRAINT `tipo_cuota_fk` FOREIGN KEY (`tipo_cuota_id`) REFERENCES `tipos_cuota` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -511,7 +511,7 @@ CREATE TABLE `usuarios` (
 
 LOCK TABLES `usuarios` WRITE;
 /*!40000 ALTER TABLE `usuarios` DISABLE KEYS */;
-INSERT INTO `usuarios` VALUES (11987654,'3','Juan','Tapia','Flores','juan.tapia@gmail.com','56954321098','Pasaje Los Naranjos 567, Portal Puerto Montt','$2a$10$X7VF.EPitdGT9lMp4VKCQOQVkfL6K7AGszw3sGGDOztSsgbac2Joa','2023-02-10',1,'vecino',NULL,NULL),(12345987,'6','Pedro','López','Rojas','pedro.lopez@gmail.com','56965432109','Calle Las Violetas 234, Portal Puerto Montt','$2a$10$LcZI1UrGmcZKVqm5HOZ.g.YG6WyHjt5e6hcwfcBFwKrnuHohFZDTC','2023-02-05',1,'socio',NULL,NULL),(13456789,'0','Miguel','Torres','Díaz','miguel.torres@gmail.com','56910987654','Calle Los Cerezos 901, Portal Puerto Montt','$2a$10$X7VF.EPitdGT9lMp4VKCQOQVkfL6K7AGszw3sGGDOztSsgbac2Joa','2023-03-01',1,'vecino',NULL,NULL),(14567890,'1','María','Sánchez','Pérez','maria.sanchez@gmail.com','56987654321','Pasaje Los Aromos 456, Portal Puerto Montt','$2a$10$8cjz/7qHzP5C6aS1wEJ4Xe9KVJ0sFdP5KXW4O8M5KwO2UDjVfVNzO','2023-01-20',1,'directiva',NULL,NULL),(15432789,'8','César','San Martín','Gómez','carlos.martinez@gmail.com','56998765432','Calle Principal 123, Portal Puerto Montt','$2a$10$8cjz/7qHzP5C6aS1wEJ4Xe9KVJ0sFdP5KXW4O8M5KwO2UDjVfVNzO','2023-01-15',1,'directiva',NULL,NULL),(16789456,'2','Ana','González','Vidal','ana.gonzalez@gmail.com','56976543210','Avenida Los Pinos 789, Portal Puerto Montt','$2a$10$8cjz/7qHzP5C6aS1wEJ4Xe9KVJ0sFdP5KXW4O8M5KwO2UDjVfVNzO','2023-01-25',1,'directiva',NULL,NULL),(17144575,'2','Angelina','Mendoza','Yañez','angelina.mendoza.y@gmail.com','+56998555466','Joseph Addison 2342 ','30b62cbe41ff0cd5a6cd8ed2ff4f47d4a152b56e0e79587a3758137f58d2bec8','2025-04-13',1,'directiva','cfd0d89c946588d802cde8fe7a48e6c0','2025-04-19 20:32:06'),(17258237,'0','Hugo','Mayorga','Mendoza','user@example.com','998555466','string','DELETED','2025-04-21',0,'vecino',NULL,NULL),(17654321,'5','Carmen','Rodríguez','Silva','carmen.rodriguez@gmail.com','56943210987','Calle Las Acacias 890, Portal Puerto Montt','$2a$10$X7VF.EPitdGT9lMp4VKCQOQVkfL6K7AGszw3sGGDOztSsgbac2Joa','2023-02-15',1,'vecino',NULL,NULL),(18765432,'1','Roberto','Fernández','Muñoz','roberto.fernandez@gmail.com','56932109876','Avenida Principal 345, Portal Puerto Montt','$2a$10$X7VF.EPitdGT9lMp4VKCQOQVkfL6K7AGszw3sGGDOztSsgbac2Joa','2023-02-20',1,'vecino',NULL,NULL),(19876543,'9','Patricia','Gutiérrez','Castro','patricia.gutierrez@gmail.com','56921098765','Pasaje Los Manzanos 678, Portal Puerto Montt','$2a$10$X7VF.EPitdGT9lMp4VKCQOQVkfL6K7AGszw3sGGDOztSsgbac2Joa','2023-02-25',1,'vecino',NULL,NULL),(20987654,'3','Laura','Vargas','Mora','laura.vargas@gmail.com','56909876543','Avenida Los Alamos 234, Portal Puerto Montt','$2a$10$X7VF.EPitdGT9lMp4VKCQOQVkfL6K7AGszw3sGGDOztSsgbac2Joa','2023-03-05',1,'vecino',NULL,NULL),(25592802,'3','Batitú','Mayorga','Mendoza','prueba@gmail.com','+56998555466','prueba','30b62cbe41ff0cd5a6cd8ed2ff4f47d4a152b56e0e79587a3758137f58d2bec8','2025-04-19',1,'vecino',NULL,NULL);
+INSERT INTO `usuarios` VALUES (11402302,'7','Cecilia','Yañez','Parraguez','ceciyan@gmail.com','+56995888466','Joseph Addison 2342','30b62cbe41ff0cd5a6cd8ed2ff4f47d4a152b56e0e79587a3758137f58d2bec8','2025-04-26',1,'vecino',NULL,NULL),(11987654,'3','Juan','Tapia','Flores','juan.tapia@gmail.com','56954321098','Pasaje Los Naranjos 567, Portal Puerto Montt','$2a$10$X7VF.EPitdGT9lMp4VKCQOQVkfL6K7AGszw3sGGDOztSsgbac2Joa','2023-02-10',1,'vecino',NULL,NULL),(12345987,'6','Pedro','López','Rojas','pedro.lopez@gmail.com','56965432109','Calle Las Violetas 234, Portal Puerto Montt','$2a$10$LcZI1UrGmcZKVqm5HOZ.g.YG6WyHjt5e6hcwfcBFwKrnuHohFZDTC','2023-02-05',1,'socio',NULL,NULL),(13456789,'0','Miguel','Torres','Díaz','miguel.torres@gmail.com','56910987654','Calle Los Cerezos 901, Portal Puerto Montt','$2a$10$X7VF.EPitdGT9lMp4VKCQOQVkfL6K7AGszw3sGGDOztSsgbac2Joa','2023-03-01',1,'vecino',NULL,NULL),(14567890,'1','María','Sánchez','Pérez','maria.sanchez@gmail.com','56987654321','Pasaje Los Aromos 456, Portal Puerto Montt','$2a$10$8cjz/7qHzP5C6aS1wEJ4Xe9KVJ0sFdP5KXW4O8M5KwO2UDjVfVNzO','2023-01-20',1,'directiva',NULL,NULL),(15432789,'8','César','San Martín','Gómez','carlos.martinez@gmail.com','56998765432','Calle Principal 123, Portal Puerto Montt','$2a$10$8cjz/7qHzP5C6aS1wEJ4Xe9KVJ0sFdP5KXW4O8M5KwO2UDjVfVNzO','2023-01-15',1,'directiva',NULL,NULL),(16789456,'2','Ana','González','Vidal','ana.gonzalez@gmail.com','56976543210','Avenida Los Pinos 789, Portal Puerto Montt','$2a$10$8cjz/7qHzP5C6aS1wEJ4Xe9KVJ0sFdP5KXW4O8M5KwO2UDjVfVNzO','2023-01-25',1,'directiva',NULL,NULL),(17144575,'2','Angelina','Mendoza','Yañez','angelina.mendoza.y@gmail.com','+56998555466','Joseph Addison 2342 ','30b62cbe41ff0cd5a6cd8ed2ff4f47d4a152b56e0e79587a3758137f58d2bec8','2025-04-13',1,'directiva','cfd0d89c946588d802cde8fe7a48e6c0','2025-04-19 20:32:06'),(17258237,'0','Hugo','Mayorga','Mendoza','user@example.com','998555466','string','DELETED','2025-04-21',0,'vecino',NULL,NULL),(17654321,'5','Carmen','Rodríguez','Silva','carmen.rodriguez@gmail.com','56943210987','Calle Las Acacias 890, Portal Puerto Montt','$2a$10$X7VF.EPitdGT9lMp4VKCQOQVkfL6K7AGszw3sGGDOztSsgbac2Joa','2023-02-15',1,'vecino',NULL,NULL),(18765432,'1','Roberto','Fernández','Muñoz','roberto.fernandez@gmail.com','56932109876','Avenida Principal 345, Portal Puerto Montt','$2a$10$X7VF.EPitdGT9lMp4VKCQOQVkfL6K7AGszw3sGGDOztSsgbac2Joa','2023-02-20',1,'vecino',NULL,NULL),(19876543,'9','Patricia','Gutiérrez','Castro','patricia.gutierrez@gmail.com','56921098765','Pasaje Los Manzanos 678, Portal Puerto Montt','$2a$10$X7VF.EPitdGT9lMp4VKCQOQVkfL6K7AGszw3sGGDOztSsgbac2Joa','2023-02-25',1,'vecino',NULL,NULL),(20987654,'3','Laura','Vargas','Mora','laura.vargas@gmail.com','56909876543','Avenida Los Alamos 234, Portal Puerto Montt','$2a$10$X7VF.EPitdGT9lMp4VKCQOQVkfL6K7AGszw3sGGDOztSsgbac2Joa','2023-03-05',1,'vecino',NULL,NULL),(25592802,'3','Batitú','Mayorga','Mendoza','prueba@gmail.com','+56998555466','prueba','30b62cbe41ff0cd5a6cd8ed2ff4f47d4a152b56e0e79587a3758137f58d2bec8','2025-04-19',1,'vecino',NULL,NULL);
 /*!40000 ALTER TABLE `usuarios` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1416,6 +1416,80 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sp_obtener_estadisticas_socios` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_obtener_estadisticas_socios`()
+BEGIN
+    -- Declaramos variables para las estadísticas
+    DECLARE total_socios INT;
+    DECLARE solicitudes_pendientes INT;
+    DECLARE socios_activos INT;
+    DECLARE socios_inactivos INT;
+    
+    -- Obtenemos el total de socios
+    SELECT COUNT(*) INTO total_socios 
+    FROM socios;
+    
+    -- Obtenemos solicitudes pendientes (usando la tabla socios)
+    SELECT COUNT(*) INTO solicitudes_pendientes 
+    FROM socios 
+    WHERE estado_solicitud = 'pendiente';
+    
+    -- Obtenemos socios activos
+    SELECT COUNT(*) INTO socios_activos 
+    FROM socios 
+    WHERE estado = 1;
+    
+    -- Obtenemos socios inactivos
+    SELECT COUNT(*) INTO socios_inactivos 
+    FROM socios 
+    WHERE estado = 0 AND estado_solicitud = 'aprobada';
+    
+    -- Retornamos las estadísticas
+    SELECT 
+        total_socios,
+        solicitudes_pendientes,
+        socios_activos,
+        socios_inactivos;
+        
+    -- Retornamos las últimas 5 actividades relacionadas con socios
+    SELECT 
+        ra.id,
+        ra.accion as titulo,
+        ra.detalles as descripcion,
+        ra.fecha_hora as fecha,
+        CASE 
+            WHEN ra.accion LIKE '%crear%' THEN 'person-add-outline'
+            WHEN ra.accion LIKE '%actualizar%' THEN 'create-outline'
+            WHEN ra.accion LIKE '%eliminar%' THEN 'trash-outline'
+            WHEN ra.accion LIKE '%pago%' THEN 'cash-outline'
+            ELSE 'document-text-outline'
+        END as icono,
+        CASE 
+            WHEN ra.accion LIKE '%crear%' THEN 'success'
+            WHEN ra.accion LIKE '%actualizar%' THEN 'primary'
+            WHEN ra.accion LIKE '%eliminar%' THEN 'danger'
+            WHEN ra.accion LIKE '%pago%' THEN 'success'
+            ELSE 'warning'
+        END as color
+    FROM registro_actividades ra
+    WHERE ra.entidad IN ('socio', 'solicitud_membresia')
+    ORDER BY ra.fecha_hora DESC
+    LIMIT 5;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `SP_PUBLICAR_NOTICIA` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -2211,4 +2285,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-04-25 11:59:54
+-- Dump completed on 2025-05-01 20:56:21

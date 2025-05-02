@@ -123,6 +123,16 @@
   },
   {
     "ContainingType": "REST_VECINDAPP.Controllers.SociosController",
+    "Method": "ObtenerEstadisticas",
+    "RelativePath": "api/Socios/estadisticas",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "REST_VECINDAPP.Controllers.SociosController",
     "Method": "RechazarSolicitud",
     "RelativePath": "api/Socios/rechazar/{rut}",
     "HttpMethod": "PUT",

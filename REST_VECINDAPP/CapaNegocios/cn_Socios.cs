@@ -260,5 +260,90 @@ namespace REST_VECINDAPP.CapaNegocios
 
             return mensaje;
         }
+
+        public EstadisticasResponse ObtenerEstadisticas()
+        {
+            var response = new EstadisticasResponse();
+            try
+            {
+                using (MySqlConnection conn = new MySqlConnection(_connectionString))
+                {
+                    try
+                    {
+                        conn.Open();
+                        using (MySqlCommand cmd = new MySqlCommand("sp_obtener_estadisticas_socios", conn))
+                        {
+                            cmd.CommandType = CommandType.StoredProcedure;
+                            using (var reader = cmd.ExecuteReader())
+                            {
+                                // Verificar si hay resultados
+                                if (!reader.HasRows)
+                                {
+                                    // Inicializar con valores por defecto si no hay datos
+                                    response.Estadisticas = new EstadisticasSocios
+                                    {
+                                        TotalSocios = 0,
+                                        SolicitudesPendientes = 0,
+                                        SociosActivos = 0,
+                                        SociosInactivos = 0
+                                    };
+                                }
+                                else if (reader.Read())
+                                {
+                                    response.Estadisticas = new EstadisticasSocios
+                                    {
+                                        TotalSocios = reader["total_socios"] != DBNull.Value ? Convert.ToInt32(reader["total_socios"]) : 0,
+                                        SolicitudesPendientes = reader["solicitudes_pendientes"] != DBNull.Value ? Convert.ToInt32(reader["solicitudes_pendientes"]) : 0,
+                                        SociosActivos = reader["socios_activos"] != DBNull.Value ? Convert.ToInt32(reader["socios_activos"]) : 0,
+                                        SociosInactivos = reader["socios_inactivos"] != DBNull.Value ? Convert.ToInt32(reader["socios_inactivos"]) : 0
+                                    };
+                                }
+
+                                // Verificar si hay un segundo conjunto de resultados
+                                if (reader.NextResult())
+                                {
+                                    response.UltimasActividades = new List<Actividad>();
+                                    while (reader.Read())
+                                    {
+                                        response.UltimasActividades.Add(new Actividad
+                                        {
+                                            Id = reader["id"] != DBNull.Value ? Convert.ToInt32(reader["id"]) : 0,
+                                            Titulo = reader["titulo"] != DBNull.Value ? reader["titulo"].ToString() : string.Empty,
+                                            Descripcion = reader["descripcion"] != DBNull.Value ? reader["descripcion"].ToString() : string.Empty,
+                                            Fecha = reader["fecha"] != DBNull.Value ? Convert.ToDateTime(reader["fecha"]) : DateTime.Now,
+                                            Icono = reader["icono"] != DBNull.Value ? reader["icono"].ToString() : string.Empty,
+                                            Color = reader["color"] != DBNull.Value ? reader["color"].ToString() : string.Empty
+                                        });
+                                    }
+                                }
+                                else
+                                {
+                                    // Inicializar con lista vacía si no hay segundo conjunto
+                                    response.UltimasActividades = new List<Actividad>();
+                                }
+                            }
+                        }
+                    }
+                    catch (MySqlException sqlEx)
+                    {
+                        // Log específico para errores de SQL
+                        Console.WriteLine($"Error de MySQL: {sqlEx.Message}, Número: {sqlEx.Number}");
+                        throw;
+                    }
+                    finally
+                    {
+                        if (conn.State == ConnectionState.Open)
+                            conn.Close();
+                    }
+                }
+                return response;
+            }
+            catch (Exception ex)
+            {
+                // Log general para cualquier otro error
+                Console.WriteLine($"Error general: {ex.Message}");
+                throw;
+            }
+        }
     }
 }

@@ -141,5 +141,33 @@ namespace REST_VECINDAPP.Controllers
                 return StatusCode(500, new { mensaje = "Error al rechazar la solicitud", error = ex.Message });
             }
         }
+        [HttpGet("estadisticas")]
+        public IActionResult ObtenerEstadisticas()
+        {
+            try
+            {
+                cn_Socios cnSocios = new cn_Socios(_config);
+                var resultado = cnSocios.ObtenerEstadisticas();
+                return Ok(resultado);
+            }
+            catch (Exception ex)
+            {
+                // Capturar más detalles del error
+                string errorMessage = ex.Message;
+                string stackTrace = ex.StackTrace;
+                string innerExceptionMessage = ex.InnerException?.Message;
+
+                // Log el error completo
+                Console.WriteLine($"Error: {errorMessage}\nStack: {stackTrace}\nInner: {innerExceptionMessage}");
+
+                return StatusCode(500, new
+                {
+                    mensaje = "Error al obtener estadísticas",
+                    error = errorMessage,
+                    detalles = innerExceptionMessage
+                });
+            }
+        }
+
     }
 }

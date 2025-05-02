@@ -334,6 +334,18 @@
         }
       }
     },
+    "/api/Socios/estadisticas": {
+      "get": {
+        "tags": [
+          "Socios"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Usuarios": {
       "get": {
         "tags": [
