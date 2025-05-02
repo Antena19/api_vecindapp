@@ -328,6 +328,8 @@ CREATE TABLE `socios` (
   `documento_identidad` blob,
   `documento_domicilio` blob,
   `estado` tinyint NOT NULL DEFAULT '0' COMMENT '''1: Activo, 0: Inactivo''',
+  `motivo_desactivacion` varchar(200) DEFAULT NULL,
+  `fecha_desactivacion` datetime DEFAULT NULL,
   PRIMARY KEY (`idsocio`),
   KEY `rut_idx` (`rut`),
   CONSTRAINT `rut` FOREIGN KEY (`rut`) REFERENCES `usuarios` (`rut`)
@@ -340,7 +342,7 @@ CREATE TABLE `socios` (
 
 LOCK TABLES `socios` WRITE;
 /*!40000 ALTER TABLE `socios` DISABLE KEYS */;
-INSERT INTO `socios` VALUES (1,15432789,'2022-12-01','2022-12-15','aprobada',NULL,NULL,NULL,1),(2,14567890,'2022-12-05','2022-12-15','aprobada',NULL,NULL,NULL,1),(3,16789456,'2022-12-10','2022-12-15','aprobada',NULL,NULL,NULL,1),(4,12345987,'2023-01-10','2023-01-20','aprobada',NULL,NULL,NULL,1);
+INSERT INTO `socios` VALUES (1,15432789,'2022-12-01','2022-12-15','aprobada',NULL,NULL,NULL,0,'Cambio domicilio','2025-05-01 23:29:26'),(2,14567890,'2022-12-05','2022-12-15','aprobada',NULL,NULL,NULL,1,NULL,NULL),(3,16789456,'2022-12-10','2022-12-15','aprobada',NULL,NULL,NULL,1,NULL,NULL),(4,12345987,'2023-01-10','2023-01-20','aprobada',NULL,NULL,NULL,1,NULL,NULL),(5,17144575,'2023-01-10','2023-01-10','aprobada',NULL,NULL,NULL,1,NULL,NULL);
 /*!40000 ALTER TABLE `socios` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -560,6 +562,63 @@ BEGIN
     WHERE rut = p_rut;
     
     SELECT 'OK' AS mensaje;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `SP_ACTUALIZAR_ESTADO_SOCIO` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_ACTUALIZAR_ESTADO_SOCIO`(
+    IN p_idsocio INT,
+    IN p_estado TINYINT,
+    IN p_motivo VARCHAR(200)
+)
+BEGIN
+    DECLARE v_existe INT;
+    DECLARE v_mensaje VARCHAR(100);
+
+    -- Verificar si el socio existe
+    SELECT COUNT(*) INTO v_existe
+    FROM socios 
+    WHERE idsocio = p_idsocio;
+
+    IF v_existe = 0 THEN
+        SET v_mensaje = CONCAT('No existe un socio con el ID: ', p_idsocio);
+        SELECT v_mensaje as mensaje;
+    ELSE
+        -- Actualizar el estado del socio
+        UPDATE socios
+        SET 
+            estado = p_estado,
+            motivo_desactivacion = CASE 
+                WHEN p_estado = 0 THEN p_motivo
+                ELSE NULL
+            END,
+            fecha_desactivacion = CASE 
+                WHEN p_estado = 0 THEN NOW()
+                ELSE NULL
+            END
+        WHERE idsocio = p_idsocio;
+
+        -- Preparar mensaje de respuesta
+        IF p_estado = 1 THEN
+            SET v_mensaje = CONCAT('Socio ', p_idsocio, ' activado correctamente');
+        ELSE
+            SET v_mensaje = CONCAT('Socio ', p_idsocio, ' desactivado correctamente');
+        END IF;
+
+        SELECT v_mensaje as mensaje;
+    END IF;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1490,6 +1549,134 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `SP_OBTENER_HISTORIAL_SOCIOS` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_OBTENER_HISTORIAL_SOCIOS`()
+BEGIN
+    SELECT 
+        u.rut,
+        u.dv_rut,
+        u.nombre,
+        u.apellido_paterno,
+        u.apellido_materno,
+        u.correo_electronico,
+        u.telefono,
+        u.direccion,
+        u.fecha_registro,
+        s.idsocio,
+        s.fecha_solicitud,
+        s.fecha_aprobacion,
+        s.estado,
+        s.motivo_desactivacion,
+        s.fecha_desactivacion
+    FROM 
+        usuarios u
+    JOIN 
+        socios s ON u.rut = s.rut
+    WHERE 
+        s.estado_solicitud = 'aprobada'
+        AND u.tipo_usuario IN ('socio', 'directiva')
+    ORDER BY 
+        s.fecha_aprobacion DESC;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `SP_OBTENER_SOCIOS_ACTIVOS` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_OBTENER_SOCIOS_ACTIVOS`()
+BEGIN
+    SELECT 
+        u.rut,
+        u.dv_rut,
+        u.nombre,
+        u.apellido_paterno,
+        u.apellido_materno,
+        u.correo_electronico,
+        u.telefono,
+        u.direccion,
+        u.fecha_registro,
+        s.idsocio,
+        s.fecha_solicitud,
+        s.fecha_aprobacion,
+        s.estado,
+        s.motivo_desactivacion
+    FROM 
+        usuarios u
+    JOIN 
+        socios s ON u.rut = s.rut
+    WHERE 
+        s.estado = 1 
+        AND s.estado_solicitud = 'aprobada'
+        AND u.tipo_usuario IN ('socio', 'directiva')
+    ORDER BY 
+        s.fecha_aprobacion DESC;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `SP_OBTENER_TODOS_SOCIOS` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_OBTENER_TODOS_SOCIOS`()
+BEGIN
+    SELECT 
+        u.rut,
+        u.dv_rut,
+        u.nombre,
+        u.apellido_paterno,
+        u.apellido_materno,
+        u.correo_electronico,
+        u.telefono,
+        u.direccion,
+        u.fecha_registro,
+        s.idsocio,
+        s.fecha_solicitud,
+        s.fecha_aprobacion,
+        s.estado,
+        s.motivo_desactivacion
+    FROM 
+        usuarios u
+    JOIN 
+        socios s ON u.rut = s.rut
+    WHERE 
+        s.estado_solicitud = 'aprobada'
+        AND u.tipo_usuario IN ('socio', 'directiva')
+    ORDER BY 
+        s.fecha_aprobacion DESC;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `SP_PUBLICAR_NOTICIA` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -2285,4 +2472,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-05-01 20:56:21
+-- Dump completed on 2025-05-01 23:31:03

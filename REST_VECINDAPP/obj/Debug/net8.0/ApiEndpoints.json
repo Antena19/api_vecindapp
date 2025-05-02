@@ -107,6 +107,37 @@
   },
   {
     "ContainingType": "REST_VECINDAPP.Controllers.SociosController",
+    "Method": "ActualizarEstadoSocio",
+    "RelativePath": "api/Socios/{id}/estado",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "datos",
+        "Type": "ActualizarEstadoSocioDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "REST_VECINDAPP.Controllers.SociosController",
+    "Method": "ObtenerSociosActivos",
+    "RelativePath": "api/Socios/activos",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "REST_VECINDAPP.Controllers.SociosController",
     "Method": "AprobarSolicitud",
     "RelativePath": "api/Socios/aprobar/{rut}",
     "HttpMethod": "PUT",
@@ -125,6 +156,16 @@
     "ContainingType": "REST_VECINDAPP.Controllers.SociosController",
     "Method": "ObtenerEstadisticas",
     "RelativePath": "api/Socios/estadisticas",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "REST_VECINDAPP.Controllers.SociosController",
+    "Method": "ObtenerHistorialSocios",
+    "RelativePath": "api/Socios/historial",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -192,6 +233,16 @@
         "IsRequired": false
       }
     ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "REST_VECINDAPP.Controllers.SociosController",
+    "Method": "ObtenerTodosSocios",
+    "RelativePath": "api/Socios/todos",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
     "ReturnTypes": []
   },
   {

@@ -346,6 +346,84 @@
         }
       }
     },
+    "/api/Socios/activos": {
+      "get": {
+        "tags": [
+          "Socios"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Socios/{id}/estado": {
+      "put": {
+        "tags": [
+          "Socios"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ActualizarEstadoSocioDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ActualizarEstadoSocioDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ActualizarEstadoSocioDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Socios/historial": {
+      "get": {
+        "tags": [
+          "Socios"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Socios/todos": {
+      "get": {
+        "tags": [
+          "Socios"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Usuarios": {
       "get": {
         "tags": [
@@ -652,6 +730,20 @@
             "nullable": true
           },
           "apellidoMaterno": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ActualizarEstadoSocioDTO": {
+        "type": "object",
+        "properties": {
+          "estado": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "motivo": {
             "type": "string",
             "nullable": true
           }

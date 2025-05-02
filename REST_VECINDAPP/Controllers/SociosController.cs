@@ -169,5 +169,85 @@ namespace REST_VECINDAPP.Controllers
             }
         }
 
+        [HttpGet("activos")]
+        [VerificarRol("directiva")]
+        public IActionResult ObtenerSociosActivos()
+        {
+            try
+            {
+                cn_Socios cnSocios = new cn_Socios(_config);
+                var socios = cnSocios.ObtenerSociosActivos();
+                return Ok(socios);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { mensaje = "Error al obtener socios activos", error = ex.Message });
+            }
+        }
+
+        [HttpPut("{id}/estado")]
+        public IActionResult ActualizarEstadoSocio(int id, [FromBody] ActualizarEstadoSocioDTO datos)
+        {
+            try
+            {
+                // Validar que el motivo sea requerido si se desactiva
+                if (datos.Estado == 0 && string.IsNullOrWhiteSpace(datos.Motivo))
+                {
+                    return BadRequest(new { mensaje = "El motivo es requerido al desactivar un socio" });
+                }
+
+                cn_Socios cnSocios = new cn_Socios(_config);
+                string resultado = cnSocios.ActualizarEstadoSocio(id, datos.Estado, datos.Motivo);
+
+                return Ok(new { mensaje = resultado });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { mensaje = "Error al actualizar el estado del socio", error = ex.Message });
+            }
+        }
+
+        /// <summary>
+        /// Endpoint para obtener el historial completo de socios (activos e inactivos)
+        /// </summary>
+        /// <returns>Lista de todos los socios con su estado y fechas</returns>
+        [VerificarRol("directiva")]
+        [HttpGet("historial")]
+        public IActionResult ObtenerHistorialSocios()
+        {
+            try
+            {
+                cn_Socios cnSocios = new cn_Socios(_config);
+                var socios = cnSocios.ObtenerHistorialSocios();
+                return Ok(socios);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { mensaje = "Error al obtener historial de socios", error = ex.Message });
+            }
+        }
+
+        /// <summary>
+        /// Obtiene todos los socios, tanto activos como inactivos
+        /// </summary>
+        /// <returns>Lista de todos los socios</returns>
+        [VerificarRol("directiva")]
+        [HttpGet("todos")]
+        public IActionResult ObtenerTodosSocios()
+        {
+            try
+            {
+                cn_Socios cnSocios = new cn_Socios(_config);
+                var socios = cnSocios.ObtenerTodosSocios();
+                return Ok(socios);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { mensaje = "Error al obtener la lista de socios", error = ex.Message });
+            }
+        }
+
+
+
     }
 }

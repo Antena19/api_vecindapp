@@ -2,6 +2,9 @@
 using REST_VECINDAPP.Modelos; // Importa los modelos de la aplicación
 using System.Data;           // Importa System.Data para trabajar con bases de datos
 using REST_VECINDAPP.Modelos.DTOs;
+using static Org.BouncyCastle.Math.EC.ECCurve;
+using Microsoft.AspNetCore.Mvc;
+using REST_VECINDAPP.Seguridad;
 
 namespace REST_VECINDAPP.CapaNegocios
 {
@@ -345,5 +348,203 @@ namespace REST_VECINDAPP.CapaNegocios
                 throw;
             }
         }
+        public List<SocioActivoDTO> ObtenerSociosActivos()
+        {
+            List<SocioActivoDTO> socios = new List<SocioActivoDTO>();
+
+            try
+            {
+                using (MySqlConnection conn = new MySqlConnection(_connectionString))
+                {
+                    conn.Open();
+                    using (MySqlCommand cmd = new MySqlCommand("SP_OBTENER_SOCIOS_ACTIVOS", conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                string nombre = reader["nombre"].ToString();
+                                string apellidoPaterno = reader["apellido_paterno"].ToString();
+                                string apellidoMaterno = reader["apellido_materno"] != DBNull.Value ? reader["apellido_materno"].ToString() : "";
+
+                                socios.Add(new SocioActivoDTO
+                                {
+                                    IdSocio = Convert.ToInt32(reader["idsocio"]),
+                                    Rut = Convert.ToInt32(reader["rut"]),
+                                    DvRut = reader["dv_rut"].ToString(),
+                                    NombreCompleto = $"{nombre} {apellidoPaterno} {apellidoMaterno}".Trim(),
+                                    Correo = reader["correo_electronico"].ToString(),
+                                    Telefono = reader["telefono"].ToString(),
+                                    Direccion = reader["direccion"].ToString(),
+                                    FechaRegistro = Convert.ToDateTime(reader["fecha_registro"]),
+                                    FechaAprobacion = reader["fecha_aprobacion"] != DBNull.Value ? Convert.ToDateTime(reader["fecha_aprobacion"]) : null
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al obtener socios activos: {ex.Message}");
+                throw;
+            }
+
+            return socios;
+        }
+
+        public string ActualizarEstadoSocio(int idSocio, int estado, string? motivo)
+        {
+            string mensaje = string.Empty;
+
+            using (MySqlConnection conn = new MySqlConnection(_connectionString))
+            {
+                try
+                {
+                    conn.Open();
+
+                    using (MySqlCommand cmd = new MySqlCommand("SP_ACTUALIZAR_ESTADO_SOCIO", conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        cmd.Parameters.AddWithValue("@p_idsocio", idSocio);
+                        cmd.Parameters.AddWithValue("@p_estado", estado);
+                        cmd.Parameters.AddWithValue("@p_motivo", motivo ?? (object)DBNull.Value);
+
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                mensaje = reader["mensaje"].ToString();
+                            }
+                        }
+                    }
+                }
+                catch (MySqlException ex)
+                {
+                    Console.WriteLine($"Error de MySQL al actualizar estado del socio: {ex.Message}");
+                    throw;
+                }
+                finally
+                {
+                    if (conn.State == ConnectionState.Open)
+                        conn.Close();
+                }
+            }
+
+            return mensaje;
+        }
+
+        /// <summary>
+        /// Método para obtener el historial completo de socios
+        /// </summary>
+        /// <returns>Lista de socios incluyendo activos e inactivos</returns>
+        public List<SocioHistorialDTO> ObtenerHistorialSocios()
+        {
+            List<SocioHistorialDTO> socios = new List<SocioHistorialDTO>();
+
+            try
+            {
+                using (MySqlConnection conn = new MySqlConnection(_connectionString))
+                {
+                    conn.Open();
+                    using (MySqlCommand cmd = new MySqlCommand("SP_OBTENER_HISTORIAL_SOCIOS", conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                string nombre = reader["nombre"].ToString();
+                                string apellidoPaterno = reader["apellido_paterno"].ToString();
+                                string apellidoMaterno = reader["apellido_materno"] != DBNull.Value ?
+                                    reader["apellido_materno"].ToString() : "";
+
+                                socios.Add(new SocioHistorialDTO
+                                {
+                                    IdSocio = Convert.ToInt32(reader["idsocio"]),
+                                    Rut = Convert.ToInt32(reader["rut"]),
+                                    DvRut = reader["dv_rut"].ToString(),
+                                    NombreCompleto = $"{nombre} {apellidoPaterno} {apellidoMaterno}".Trim(),
+                                    Correo = reader["correo_electronico"].ToString(),
+                                    Telefono = reader["telefono"].ToString(),
+                                    Direccion = reader["direccion"].ToString(),
+                                    FechaRegistro = Convert.ToDateTime(reader["fecha_registro"]),
+                                    FechaAprobacion = reader["fecha_aprobacion"] != DBNull.Value ?
+                                        Convert.ToDateTime(reader["fecha_aprobacion"]) : null,
+                                    Estado = Convert.ToInt32(reader["estado"]),
+                                    MotivoDesactivacion = reader["motivo_desactivacion"]?.ToString(),
+                                    FechaDesactivacion = reader["fecha_desactivacion"] != DBNull.Value ?
+                                        Convert.ToDateTime(reader["fecha_desactivacion"]) : null
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al obtener historial de socios: {ex.Message}");
+                throw;
+            }
+
+            return socios;
+        }
+
+        public List<SocioActivoDTO> ObtenerTodosSocios()
+        {
+            List<SocioActivoDTO> socios = new List<SocioActivoDTO>();
+
+            try
+            {
+                using (MySqlConnection conn = new MySqlConnection(_connectionString))
+                {
+                    conn.Open();
+                    using (MySqlCommand cmd = new MySqlCommand("SP_OBTENER_TODOS_SOCIOS", conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                string nombre = reader["nombre"].ToString();
+                                string apellidoPaterno = reader["apellido_paterno"].ToString();
+                                string apellidoMaterno = reader["apellido_materno"] != DBNull.Value ?
+                                    reader["apellido_materno"].ToString() : "";
+
+                                socios.Add(new SocioActivoDTO
+                                {
+                                    IdSocio = Convert.ToInt32(reader["idsocio"]),
+                                    Rut = Convert.ToInt32(reader["rut"]),
+                                    DvRut = reader["dv_rut"].ToString(),
+                                    NombreCompleto = $"{nombre} {apellidoPaterno} {apellidoMaterno}".Trim(),
+                                    Correo = reader["correo_electronico"].ToString(),
+                                    Telefono = reader["telefono"].ToString(),
+                                    Direccion = reader["direccion"].ToString(),
+                                    FechaRegistro = Convert.ToDateTime(reader["fecha_registro"]),
+                                    FechaAprobacion = reader["fecha_aprobacion"] != DBNull.Value ?
+                                        Convert.ToDateTime(reader["fecha_aprobacion"]) : null,
+                                    Estado = Convert.ToInt32(reader["estado"]),
+                                    MotivoDesactivacion = reader["motivo_desactivacion"]?.ToString()
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al obtener todos los socios: {ex.Message}");
+                throw;
+            }
+
+            return socios;
+        }
+
+
     }
 }
