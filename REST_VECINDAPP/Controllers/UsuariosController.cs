@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using System.ComponentModel.DataAnnotations;
 using REST_VECINDAPP.Servicios;
 using System.Security.Claims;
+using REST_VECINDAPP.Modelos.DTOs;
 
 namespace REST_VECINDAPP.Controllers
 {
@@ -90,12 +91,9 @@ namespace REST_VECINDAPP.Controllers
             }
         }
 
-        /// <summary>
-        /// Enviar solicitud para convertirse en socio
-        /// </summary>
         [HttpPost("socios/solicitud")]
         [Authorize]
-        public IActionResult EnviarSolicitudSocio([FromBody] SolicitudSocioDto solicitudSocio)
+        public IActionResult EnviarSolicitudSocio([FromBody] SolicitudMembresia solicitud)
         {
             if (!ModelState.IsValid)
             {
@@ -110,30 +108,23 @@ namespace REST_VECINDAPP.Controllers
 
             var cnUsuarios = _cnUsuarios;
 
-
             var (exito, mensaje) = cnUsuarios.EnviarSolicitudSocio(
-                solicitudSocio.Rut,
-                solicitudSocio.RutArchivo
+                solicitud.Rut,
+                solicitud.DocumentoIdentidad,
+                solicitud.DocumentoDomicilio
             );
 
             if (exito)
             {
-                return Ok(new
-                {
-                    mensaje = "Solicitud de socio enviada exitosamente"
-                });
+                return Ok(new { mensaje = "Solicitud de socio enviada exitosamente" });
             }
             else
             {
                 if (mensaje.Contains("ya enviada"))
-                {
                     return Conflict(new { mensaje });
-                }
 
                 if (mensaje.Contains("no cumple"))
-                {
                     return BadRequest(new { mensaje });
-                }
 
                 return BadRequest(new { mensaje });
             }

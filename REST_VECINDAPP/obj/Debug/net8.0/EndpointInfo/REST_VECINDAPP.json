@@ -202,52 +202,6 @@
         }
       }
     },
-    "/api/Socios/solicitar": {
-      "post": {
-        "tags": [
-          "Socios"
-        ],
-        "requestBody": {
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "Rut": {
-                    "type": "integer",
-                    "format": "int32"
-                  },
-                  "DocumentoIdentidad": {
-                    "type": "string",
-                    "format": "binary"
-                  },
-                  "DocumentoDomicilio": {
-                    "type": "string",
-                    "format": "binary"
-                  }
-                }
-              },
-              "encoding": {
-                "Rut": {
-                  "style": "form"
-                },
-                "DocumentoIdentidad": {
-                  "style": "form"
-                },
-                "DocumentoDomicilio": {
-                  "style": "form"
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
     "/api/Socios/solicitudes": {
       "get": {
         "tags": [
@@ -513,17 +467,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/SolicitudSocioDto"
+                "$ref": "#/components/schemas/SolicitudMembresia"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/SolicitudSocioDto"
+                "$ref": "#/components/schemas/SolicitudMembresia"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/SolicitudSocioDto"
+                "$ref": "#/components/schemas/SolicitudMembresia"
               }
             }
           }
@@ -894,12 +848,10 @@
           },
           "documento_identidad": {
             "type": "string",
-            "format": "byte",
             "nullable": true
           },
           "documento_domicilio": {
             "type": "string",
-            "format": "byte",
             "nullable": true
           },
           "estado": {
@@ -909,23 +861,18 @@
         },
         "additionalProperties": false
       },
-      "SolicitudSocioDto": {
-        "required": [
-          "rut",
-          "rutArchivo"
-        ],
+      "SolicitudMembresia": {
         "type": "object",
         "properties": {
           "rut": {
             "type": "integer",
             "format": "int32"
           },
-          "rutArchivo": {
-            "minLength": 1,
-            "type": "string"
+          "documentoIdentidad": {
+            "type": "string",
+            "nullable": true
           },
-          "descripcion": {
-            "maxLength": 500,
+          "documentoDomicilio": {
             "type": "string",
             "nullable": true
           }

@@ -87,13 +87,13 @@ namespace REST_VECINDAPP.CapaNegocios
                         // Obtiene el motivo de rechazo (si existe)
                         socioTemp.motivo_rechazo = Convert.ToString(reader["motivo_rechazo"]);
 
-                        // Obtiene el documento de identidad (blob) si existe
+                        // Obtiene la ruta del documento de identidad si existe
                         socioTemp.documento_identidad = reader["documento_identidad"] != DBNull.Value ?
-                            (byte[])reader["documento_identidad"] : null;
+                            reader["documento_identidad"].ToString() : null;
 
-                        // Obtiene el documento de domicilio (blob) si existe
+                        // Obtiene la ruta del documento de domicilio si existe
                         socioTemp.documento_domicilio = reader["documento_domicilio"] != DBNull.Value ?
-                            (byte[])reader["documento_domicilio"] : null;
+                            reader["documento_domicilio"].ToString() : null;
 
                         // Obtiene el estado como entero (tinyint) en lugar de booleano
                         socioTemp.estado = Convert.ToInt32(reader["estado"]);
@@ -111,43 +111,7 @@ namespace REST_VECINDAPP.CapaNegocios
             return Socios;
         }
 
-        /// <summary>
-        /// Método para solicitar membresía como socio
-        /// </summary>
-        /// <param name="rut">RUT del vecino que solicita</param>
-        /// <param name="documentoIdentidad">Imagen del documento de identidad</param>
-        /// <param name="documentoDomicilio">Comprobante de domicilio</param>
-        /// <returns>Mensaje de resultado</returns>
-        public string SolicitarMembresia(int rut, byte[] documentoIdentidad, byte[] documentoDomicilio)
-        {
-            string mensaje = string.Empty;
-
-            using (MySqlConnection conn = new MySqlConnection(_connectionString))
-            {
-                conn.Open();
-
-                using (MySqlCommand cmd = new MySqlCommand("SP_SOLICITAR_MEMBRESIA_SOCIO", conn))
-                {
-                    cmd.CommandType = CommandType.StoredProcedure;
-
-                    cmd.Parameters.AddWithValue("@p_rut", rut);
-                    cmd.Parameters.AddWithValue("@p_documento_identidad", documentoIdentidad);
-                    cmd.Parameters.AddWithValue("@p_documento_domicilio", documentoDomicilio);
-
-                    using (var reader = cmd.ExecuteReader())
-                    {
-                        if (reader.Read())
-                        {
-                            mensaje = reader["mensaje"].ToString();
-                        }
-                    }
-                }
-
-                conn.Close();
-            }
-
-            return mensaje;
-        }
+    
 
         /// <summary>
         /// Método para obtener las solicitudes de socios

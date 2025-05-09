@@ -799,13 +799,7 @@ namespace REST_VECINDAPP.CapaNegocios
             }
         }
 
-        /// <summary>
-        /// Enviar solicitud para convertirse en socio
-        /// </summary>
-        /// <param name="rut">RUT del usuario solicitante</param>
-        /// <param name="rutArchivo">Ruta o identificador del archivo de solicitud</param>
-        /// <returns>Resultado de la solicitud de socio</returns>
-        public (bool Exito, string Mensaje) EnviarSolicitudSocio(int rut, string rutArchivo)
+        public (bool Exito, string Mensaje) EnviarSolicitudSocio(int rut, string documentoIdentidad, string documentoDomicilio)
         {
             using (MySqlConnection conn = new MySqlConnection(_connectionString))
             {
@@ -818,7 +812,8 @@ namespace REST_VECINDAPP.CapaNegocios
 
                         // Parámetros del procedimiento almacenado
                         cmd.Parameters.AddWithValue("@p_rut", rut);
-                        cmd.Parameters.AddWithValue("@p_rut_archivo", rutArchivo);
+                        cmd.Parameters.AddWithValue("@p_documento_identidad", documentoIdentidad);
+                        cmd.Parameters.AddWithValue("@p_documento_domicilio", documentoDomicilio);
 
                         // Parámetro de salida para el mensaje
                         MySqlParameter msgParam = new MySqlParameter("@p_mensaje", MySqlDbType.VarChar, 255);

@@ -195,32 +195,6 @@
   },
   {
     "ContainingType": "REST_VECINDAPP.Controllers.SociosController",
-    "Method": "SolicitarMembresia",
-    "RelativePath": "api/Socios/solicitar",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "Rut",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "DocumentoIdentidad",
-        "Type": "Microsoft.AspNetCore.Http.IFormFile",
-        "IsRequired": false
-      },
-      {
-        "Name": "DocumentoDomicilio",
-        "Type": "Microsoft.AspNetCore.Http.IFormFile",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "REST_VECINDAPP.Controllers.SociosController",
     "Method": "ConsultarSolicitudes",
     "RelativePath": "api/Socios/solicitudes",
     "HttpMethod": "GET",
@@ -364,8 +338,8 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "solicitudSocio",
-        "Type": "REST_VECINDAPP.Controllers.UsuariosController\u002BSolicitudSocioDto",
+        "Name": "solicitud",
+        "Type": "REST_VECINDAPP.Modelos.DTOs.SolicitudMembresia",
         "IsRequired": true
       }
     ],

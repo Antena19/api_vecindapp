@@ -3,7 +3,7 @@
     public class SolicitudMembresia
     {
         public int Rut { get; set; }
-        public IFormFile DocumentoIdentidad { get; set; }
-        public IFormFile DocumentoDomicilio { get; set; }
+        public string? DocumentoIdentidad { get; set; }   // <--- CAMBIADO
+        public string? DocumentoDomicilio { get; set; }   // <--- CAMBIADO
     }
 }

@@ -37,45 +37,7 @@ namespace REST_VECINDAPP.Controllers
             return Ok(cnSocios.ListarSocios(idsocio));
         }
 
-        /// <summary>
-        /// Endpoint para solicitar ser socio
-        /// </summary>
-        /// <param name="solicitud">Datos de la solicitud</param>
-        /// <returns>Resultado de la operación</returns>
-        [VerificarRol("vecino", "socio", "directiva")]
-        [HttpPost("solicitar")]
-        public IActionResult SolicitarMembresia([FromForm] SolicitudMembresia solicitud)
-        {
-            try
-            {
-                // Convertir el archivo de identidad a bytes
-                byte[] documentoIdentidad;
-                using (var ms = new MemoryStream())
-                {
-                    solicitud.DocumentoIdentidad.CopyTo(ms);
-                    documentoIdentidad = ms.ToArray();
-                }
-
-                // Convertir el archivo de domicilio a bytes
-                byte[] documentoDomicilio;
-                using (var ms = new MemoryStream())
-                {
-                    solicitud.DocumentoDomicilio.CopyTo(ms);
-                    documentoDomicilio = ms.ToArray();
-                }
-
-                cn_Socios cnSocios = new cn_Socios(_config);
-                string resultado = cnSocios.SolicitarMembresia(solicitud.Rut, documentoIdentidad, documentoDomicilio);
-
-                return Ok(new { mensaje = resultado });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { mensaje = "Error al procesar la solicitud", error = ex.Message });
-            }
-        }
-
-        /// <summary>
+             /// <summary>
         /// Endpoint para consultar solicitudes de socio
         /// </summary>
         /// <param name="estado">Estado de las solicitudes a consultar</param>
