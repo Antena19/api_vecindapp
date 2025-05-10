@@ -325,8 +325,8 @@ CREATE TABLE `socios` (
   `fecha_aprobacion` date DEFAULT NULL,
   `estado_solicitud` varchar(45) NOT NULL DEFAULT 'pendiente',
   `motivo_rechazo` varchar(200) DEFAULT NULL,
-  `documento_identidad` blob,
-  `documento_domicilio` blob,
+  `documento_identidad` varchar(255) DEFAULT NULL,
+  `documento_domicilio` varchar(255) DEFAULT NULL,
   `estado` tinyint NOT NULL DEFAULT '0' COMMENT '''1: Activo, 0: Inactivo''',
   `motivo_desactivacion` varchar(200) DEFAULT NULL,
   `fecha_desactivacion` datetime DEFAULT NULL,
@@ -2402,8 +2402,8 @@ DELIMITER ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_SOLICITAR_MEMBRESIA_SOCIO`(
     IN p_rut INT,
-    IN p_documento_identidad BLOB,
-    IN p_documento_domicilio BLOB
+    IN p_ruta_documento_identidad VARCHAR(255),
+    IN p_ruta_documento_domicilio VARCHAR(255)
 )
 BEGIN
     -- Verificar que el usuario no sea ya socio
@@ -2416,7 +2416,7 @@ BEGIN
     INSERT INTO socios 
     (rut, fecha_solicitud, estado_solicitud, documento_identidad, documento_domicilio)
     VALUES 
-    (p_rut, CURRENT_DATE, 'pendiente', p_documento_identidad, p_documento_domicilio);
+    (p_rut, CURRENT_DATE, 'pendiente', p_ruta_documento_identidad, p_ruta_documento_domicilio);
 
     SELECT 'Solicitud de membresía registrada exitosamente' AS mensaje;
 END ;;
@@ -2472,4 +2472,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-05-01 23:31:03
+-- Dump completed on 2025-05-09 20:04:22
