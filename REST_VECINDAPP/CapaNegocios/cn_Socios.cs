@@ -1,142 +1,69 @@
-﻿using MySqlConnector;        // Importa la biblioteca para conectar con MySQL
-using REST_VECINDAPP.Modelos; // Importa los modelos de la aplicación
-using System.Data;           // Importa System.Data para trabajar con bases de datos
+﻿using MySqlConnector;
+using REST_VECINDAPP.Modelos;
+using System.Data;
 using REST_VECINDAPP.Modelos.DTOs;
-using static Org.BouncyCastle.Math.EC.ECCurve;
-using Microsoft.AspNetCore.Mvc;
-using REST_VECINDAPP.Seguridad;
 
 namespace REST_VECINDAPP.CapaNegocios
 {
-    /// <summary>
-    /// Clase que maneja la lógica de negocio relacionada con los socios de la junta de vecinos
-    /// </summary>
     public class cn_Socios
     {
-        // Variable para almacenar la cadena de conexión a la base de datos
         private readonly string _connectionString;
 
-        /// <summary>
-        /// Constructor que recibe la configuración de la aplicación
-        /// </summary>
-        /// <param name="configuration">Objeto de configuración que contiene la cadena de conexión</param>
         public cn_Socios(IConfiguration configuration)
         {
             _connectionString = configuration.GetConnectionString("DefaultConnection")
                 ?? throw new ArgumentException("La cadena de conexión 'DefaultConnection' no está configurada.");
         }
 
-        /// <summary>
-        /// Método que obtiene la lista de socios desde la base de datos
-        /// </summary>
-        /// <param name="idsocio">ID del socio a buscar. Si es -1, devuelve todos los socios</param>
-        /// <returns>Lista de objetos Socio</returns>
-        public List<Socio> ListarSocios(int idsocio)
+        public string SolicitarMembresia(int rut, string rutaDocumentoIdentidad, string rutaDocumentoDomicilio)
         {
-            // Crea una lista vacía para almacenar los resultados
-            List<Socio> Socios = new List<Socio>();
-
-            // Crea y administra la conexión a la base de datos (se cerrará automáticamente al salir del bloque)
-            using (MySqlConnection conn = new MySqlConnection(_connectionString))
-            {
-                // Abre la conexión a la base de datos
-                conn.Open();
-
-                // Crea un comando para ejecutar el procedimiento almacenado
-                MySqlCommand cmd = new MySqlCommand("SP_SELECT_SOCIOS", conn);
-
-                // Especifica que el comando es un procedimiento almacenado
-                cmd.CommandType = CommandType.StoredProcedure;
-
-                // Agrega el parámetro para el procedimiento almacenado
-                // Si idsocio es -1, se pasa null para obtener todos los socios
-                // Si no, se filtra por el idsocio especificado
-                if (idsocio != -1)
-                    cmd.Parameters.AddWithValue("@p_idsocio", idsocio);
-                else
-                    cmd.Parameters.AddWithValue("@p_idsocio", null);
-
-                // Ejecuta el comando y obtiene un lector de datos
-                using (var reader = cmd.ExecuteReader())
-                {
-                    // Itera sobre cada fila de resultados
-                    while (reader.Read())
-                    {
-                        // Crea un nuevo objeto Socio para cada registro
-                        Socio socioTemp = new Socio();
-
-                        // Lee cada columna del registro y asigna al objeto Socio
-
-                        // Obtiene el ID del socio como entero
-                        socioTemp.idsocio = Convert.ToInt32(reader["idsocio"]);
-
-                        // Obtiene el RUT del socio como entero
-                        socioTemp.rut = Convert.ToInt32(reader["rut"]);
-
-                        // Obtiene la fecha de solicitud, si es nula usa DateTime.MinValue
-                        socioTemp.fecha_solicitud = reader["fecha_solicitud"] != DBNull.Value ?
-                            Convert.ToDateTime(reader["fecha_solicitud"]) : DateTime.MinValue;
-
-                        // Obtiene la fecha de aprobación, puede ser nula
-                        socioTemp.fecha_aprobacion = reader["fecha_aprobacion"] != DBNull.Value ?
-                            Convert.ToDateTime(reader["fecha_aprobacion"]) : (DateTime?)null;
-
-                        // Obtiene el estado de la solicitud (pendiente, aprobada, rechazada)
-                        socioTemp.estado_solicitud = Convert.ToString(reader["estado_solicitud"]);
-
-                        // Obtiene el motivo de rechazo (si existe)
-                        socioTemp.motivo_rechazo = Convert.ToString(reader["motivo_rechazo"]);
-
-                        // Obtiene la ruta del documento de identidad si existe
-                        socioTemp.documento_identidad = reader["documento_identidad"] != DBNull.Value ?
-                            reader["documento_identidad"].ToString() : null;
-
-                        // Obtiene la ruta del documento de domicilio si existe
-                        socioTemp.documento_domicilio = reader["documento_domicilio"] != DBNull.Value ?
-                            reader["documento_domicilio"].ToString() : null;
-
-                        // Obtiene el estado como entero (tinyint) en lugar de booleano
-                        socioTemp.estado = Convert.ToInt32(reader["estado"]);
-
-                        // Agrega el socio a la lista de resultados
-                        Socios.Add(socioTemp);
-                    }
-                }
-
-                // Cierra la conexión a la base de datos
-                conn.Close();
-            }
-
-            // Devuelve la lista de socios
-            return Socios;
-        }
-
-    
-
-        /// <summary>
-        /// Método para obtener las solicitudes de socios
-        /// </summary>
-        /// <param name="estadoSolicitud">Estado de solicitud a filtrar (pendiente, aprobada, rechazada). Si es null, trae todas</param>
-        /// <returns>Lista de solicitudes con datos del usuario</returns>
-        public List<SolicitudSocioDTO> ConsultarSolicitudes(string estadoSolicitud = null)
-        {
-            List<SolicitudSocioDTO> solicitudes = new List<SolicitudSocioDTO>();
+            string mensaje = string.Empty;
 
             using (MySqlConnection conn = new MySqlConnection(_connectionString))
             {
                 conn.Open();
 
-                using (MySqlCommand cmd = new MySqlCommand("SP_CONSULTAR_SOLICITUDES_SOCIOS", conn))
+                using (MySqlCommand cmd = new MySqlCommand("SP_SOLICITAR_MEMBRESIA_SOCIO", conn))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
 
-                    cmd.Parameters.AddWithValue("@p_estado_solicitud", estadoSolicitud ?? "");
+                    cmd.Parameters.AddWithValue("@p_rut", rut);
+                    cmd.Parameters.AddWithValue("@p_ruta_documento_identidad", rutaDocumentoIdentidad);
+                    cmd.Parameters.AddWithValue("@p_ruta_documento_domicilio", rutaDocumentoDomicilio);
 
                     using (var reader = cmd.ExecuteReader())
                     {
-                        while (reader.Read())
+                        if (reader.Read())
                         {
-                            SolicitudSocioDTO solicitud = new SolicitudSocioDTO
+                            mensaje = reader["mensaje"].ToString();
+                        }
+                    }
+                }
+
+                conn.Close();
+            }
+
+            return mensaje;
+        }
+
+        public SolicitudSocioDTO ConsultarEstadoSolicitud(int rut)
+        {
+            SolicitudSocioDTO solicitud = null;
+
+            using (MySqlConnection conn = new MySqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                using (MySqlCommand cmd = new MySqlCommand("SP_CONSULTAR_ESTADO_SOLICITUD", conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@p_rut", rut);
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            solicitud = new SolicitudSocioDTO
                             {
                                 Rut = Convert.ToInt32(reader["rut"]),
                                 Nombre = reader["nombre"].ToString(),
@@ -146,8 +73,6 @@ namespace REST_VECINDAPP.CapaNegocios
                                 EstadoSolicitud = reader["estado_solicitud"].ToString(),
                                 MotivoRechazo = reader["motivo_rechazo"].ToString()
                             };
-
-                            solicitudes.Add(solicitud);
                         }
                     }
                 }
@@ -155,15 +80,109 @@ namespace REST_VECINDAPP.CapaNegocios
                 conn.Close();
             }
 
-            return solicitudes;
+            return solicitud;
         }
 
-        /// <summary>
-        /// Método para aprobar una solicitud de socio
-        /// </summary>
-        /// <param name="rut">RUT del solicitante</param>
-        /// <returns>Mensaje de resultado</returns>
-        public string AprobarSolicitud(int rut)
+        public Socio ObtenerPerfil(int rut)
+        {
+            Socio socio = null;
+
+            using (MySqlConnection conn = new MySqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                using (MySqlCommand cmd = new MySqlCommand("SP_OBTENER_PERFIL_SOCIO", conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@p_rut", rut);
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            socio = new Socio
+                            {
+                                idsocio = Convert.ToInt32(reader["idsocio"]),
+                                rut = Convert.ToInt32(reader["rut"]),
+                                fecha_solicitud = reader["fecha_solicitud"] != DBNull.Value ?
+                                    Convert.ToDateTime(reader["fecha_solicitud"]) : DateTime.MinValue,
+                                fecha_aprobacion = reader["fecha_aprobacion"] != DBNull.Value ?
+                                    Convert.ToDateTime(reader["fecha_aprobacion"]) : (DateTime?)null,
+                                estado_solicitud = Convert.ToString(reader["estado_solicitud"]),
+                                estado = Convert.ToInt32(reader["estado"])
+                            };
+                        }
+                    }
+                }
+
+                conn.Close();
+            }
+
+            return socio;
+        }
+
+        public bool EsSocio(int rut)
+        {
+            bool esSocio = false;
+
+            using (MySqlConnection conn = new MySqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                using (MySqlCommand cmd = new MySqlCommand("SP_VERIFICAR_ES_SOCIO", conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@p_rut", rut);
+
+                    var result = cmd.ExecuteScalar();
+                    esSocio = result != null && Convert.ToBoolean(result);
+                }
+
+                conn.Close();
+            }
+
+            return esSocio;
+        }
+
+        /*public List<CuotaSocioDTO> ConsultarCuotas(int rut)
+        {
+            List<CuotaSocioDTO> cuotas = new List<CuotaSocioDTO>();
+
+            using (MySqlConnection conn = new MySqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                using (MySqlCommand cmd = new MySqlCommand("SP_CONSULTAR_CUOTAS_SOCIO", conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@p_rut", rut);
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            CuotaSocioDTO cuota = new CuotaSocioDTO
+                            {
+                                Id = Convert.ToInt32(reader["id"]),
+                                FechaGeneracion = Convert.ToDateTime(reader["fecha_generacion"]),
+                                FechaVencimiento = Convert.ToDateTime(reader["fecha_vencimiento"]),
+                                Monto = Convert.ToDecimal(reader["monto"]),
+                                Estado = reader["estado"].ToString(),
+                                TipoCuota = reader["nombre_tipo_cuota"].ToString()
+                            };
+
+                            cuotas.Add(cuota);
+                        }
+                    }
+                }
+
+                conn.Close();
+            }
+
+            return cuotas;
+        }*/
+
+        public string PagarCuota(int rut, int cuotaId, decimal monto, string metodoPago)
         {
             string mensaje = string.Empty;
 
@@ -171,17 +190,22 @@ namespace REST_VECINDAPP.CapaNegocios
             {
                 conn.Open();
 
-                using (MySqlCommand cmd = new MySqlCommand("SP_APROBAR_SOLICITUD_SOCIO", conn))
+                using (MySqlCommand cmd = new MySqlCommand("SP_REGISTRAR_PAGO_CUOTA", conn))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
 
-                    cmd.Parameters.AddWithValue("@p_rut", rut);
+                    cmd.Parameters.AddWithValue("@p_usuario_rut", rut);
+                    cmd.Parameters.AddWithValue("@p_cuota_id", cuotaId);
+                    cmd.Parameters.AddWithValue("@p_monto", monto);
+                    cmd.Parameters.AddWithValue("@p_metodo_pago", metodoPago);
+                    cmd.Parameters.AddWithValue("@p_token_webpay", DBNull.Value);
+                    cmd.Parameters.AddWithValue("@p_url_pago", DBNull.Value);
 
                     using (var reader = cmd.ExecuteReader())
                     {
                         if (reader.Read())
                         {
-                            mensaje = reader["mensaje"].ToString();
+                            mensaje = "Pago registrado correctamente";
                         }
                     }
                 }
@@ -192,32 +216,38 @@ namespace REST_VECINDAPP.CapaNegocios
             return mensaje;
         }
 
-        /// <summary>
-        /// Método para rechazar una solicitud de socio
-        /// </summary>
-        /// <param name="rut">RUT del solicitante</param>
-        /// <param name="motivoRechazo">Motivo del rechazo</param>
-        /// <returns>Mensaje de resultado</returns>
-        public string RechazarSolicitud(int rut, string motivoRechazo)
+        /* public List<CertificadoSocioDTO> ConsultarCertificados(int rut)
         {
-            string mensaje = string.Empty;
+            List<CertificadoSocioDTO> certificados = new List<CertificadoSocioDTO>();
 
             using (MySqlConnection conn = new MySqlConnection(_connectionString))
             {
                 conn.Open();
 
-                using (MySqlCommand cmd = new MySqlCommand("SP_RECHAZAR_SOLICITUD_SOCIO", conn))
+                using (MySqlCommand cmd = new MySqlCommand("SP_CONSULTAR_HISTORIAL_CERTIFICADOS", conn))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
-
-                    cmd.Parameters.AddWithValue("@p_rut", rut);
-                    cmd.Parameters.AddWithValue("@p_motivo_rechazo", motivoRechazo);
+                    cmd.Parameters.AddWithValue("@p_usuario_rut", rut);
+                    cmd.Parameters.AddWithValue("@p_estado", DBNull.Value);
 
                     using (var reader = cmd.ExecuteReader())
                     {
-                        if (reader.Read())
+                        while (reader.Read())
                         {
-                            mensaje = reader["mensaje"].ToString();
+                            CertificadoSocioDTO certificado = new CertificadoSocioDTO
+                            {
+                                IdSolicitud = Convert.ToInt32(reader["id_solicitud"]),
+                                TipoCertificado = reader["tipo_certificado"].ToString(),
+                                FechaSolicitud = Convert.ToDateTime(reader["fecha_solicitud"]),
+                                Estado = reader["estado"].ToString(),
+                                CodigoVerificacion = reader["codigo_verificacion"]?.ToString(),
+                                FechaEmision = reader["fecha_emision"] != DBNull.Value ?
+                                    Convert.ToDateTime(reader["fecha_emision"]) : (DateTime?)null,
+                                FechaVencimiento = reader["fecha_vencimiento"] != DBNull.Value ?
+                                    Convert.ToDateTime(reader["fecha_vencimiento"]) : (DateTime?)null
+                            };
+
+                            certificados.Add(certificado);
                         }
                     }
                 }
@@ -225,290 +255,7 @@ namespace REST_VECINDAPP.CapaNegocios
                 conn.Close();
             }
 
-            return mensaje;
-        }
-
-        public EstadisticasResponse ObtenerEstadisticas()
-        {
-            var response = new EstadisticasResponse();
-            try
-            {
-                using (MySqlConnection conn = new MySqlConnection(_connectionString))
-                {
-                    try
-                    {
-                        conn.Open();
-                        using (MySqlCommand cmd = new MySqlCommand("sp_obtener_estadisticas_socios", conn))
-                        {
-                            cmd.CommandType = CommandType.StoredProcedure;
-                            using (var reader = cmd.ExecuteReader())
-                            {
-                                // Verificar si hay resultados
-                                if (!reader.HasRows)
-                                {
-                                    // Inicializar con valores por defecto si no hay datos
-                                    response.Estadisticas = new EstadisticasSocios
-                                    {
-                                        TotalSocios = 0,
-                                        SolicitudesPendientes = 0,
-                                        SociosActivos = 0,
-                                        SociosInactivos = 0
-                                    };
-                                }
-                                else if (reader.Read())
-                                {
-                                    response.Estadisticas = new EstadisticasSocios
-                                    {
-                                        TotalSocios = reader["total_socios"] != DBNull.Value ? Convert.ToInt32(reader["total_socios"]) : 0,
-                                        SolicitudesPendientes = reader["solicitudes_pendientes"] != DBNull.Value ? Convert.ToInt32(reader["solicitudes_pendientes"]) : 0,
-                                        SociosActivos = reader["socios_activos"] != DBNull.Value ? Convert.ToInt32(reader["socios_activos"]) : 0,
-                                        SociosInactivos = reader["socios_inactivos"] != DBNull.Value ? Convert.ToInt32(reader["socios_inactivos"]) : 0
-                                    };
-                                }
-
-                                // Verificar si hay un segundo conjunto de resultados
-                                if (reader.NextResult())
-                                {
-                                    response.UltimasActividades = new List<Actividad>();
-                                    while (reader.Read())
-                                    {
-                                        response.UltimasActividades.Add(new Actividad
-                                        {
-                                            Id = reader["id"] != DBNull.Value ? Convert.ToInt32(reader["id"]) : 0,
-                                            Titulo = reader["titulo"] != DBNull.Value ? reader["titulo"].ToString() : string.Empty,
-                                            Descripcion = reader["descripcion"] != DBNull.Value ? reader["descripcion"].ToString() : string.Empty,
-                                            Fecha = reader["fecha"] != DBNull.Value ? Convert.ToDateTime(reader["fecha"]) : DateTime.Now,
-                                            Icono = reader["icono"] != DBNull.Value ? reader["icono"].ToString() : string.Empty,
-                                            Color = reader["color"] != DBNull.Value ? reader["color"].ToString() : string.Empty
-                                        });
-                                    }
-                                }
-                                else
-                                {
-                                    // Inicializar con lista vacía si no hay segundo conjunto
-                                    response.UltimasActividades = new List<Actividad>();
-                                }
-                            }
-                        }
-                    }
-                    catch (MySqlException sqlEx)
-                    {
-                        // Log específico para errores de SQL
-                        Console.WriteLine($"Error de MySQL: {sqlEx.Message}, Número: {sqlEx.Number}");
-                        throw;
-                    }
-                    finally
-                    {
-                        if (conn.State == ConnectionState.Open)
-                            conn.Close();
-                    }
-                }
-                return response;
-            }
-            catch (Exception ex)
-            {
-                // Log general para cualquier otro error
-                Console.WriteLine($"Error general: {ex.Message}");
-                throw;
-            }
-        }
-        public List<SocioActivoDTO> ObtenerSociosActivos()
-        {
-            List<SocioActivoDTO> socios = new List<SocioActivoDTO>();
-
-            try
-            {
-                using (MySqlConnection conn = new MySqlConnection(_connectionString))
-                {
-                    conn.Open();
-                    using (MySqlCommand cmd = new MySqlCommand("SP_OBTENER_SOCIOS_ACTIVOS", conn))
-                    {
-                        cmd.CommandType = CommandType.StoredProcedure;
-
-                        using (var reader = cmd.ExecuteReader())
-                        {
-                            while (reader.Read())
-                            {
-                                string nombre = reader["nombre"].ToString();
-                                string apellidoPaterno = reader["apellido_paterno"].ToString();
-                                string apellidoMaterno = reader["apellido_materno"] != DBNull.Value ? reader["apellido_materno"].ToString() : "";
-
-                                socios.Add(new SocioActivoDTO
-                                {
-                                    IdSocio = Convert.ToInt32(reader["idsocio"]),
-                                    Rut = Convert.ToInt32(reader["rut"]),
-                                    DvRut = reader["dv_rut"].ToString(),
-                                    NombreCompleto = $"{nombre} {apellidoPaterno} {apellidoMaterno}".Trim(),
-                                    Correo = reader["correo_electronico"].ToString(),
-                                    Telefono = reader["telefono"].ToString(),
-                                    Direccion = reader["direccion"].ToString(),
-                                    FechaRegistro = Convert.ToDateTime(reader["fecha_registro"]),
-                                    FechaAprobacion = reader["fecha_aprobacion"] != DBNull.Value ? Convert.ToDateTime(reader["fecha_aprobacion"]) : null
-                                });
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error al obtener socios activos: {ex.Message}");
-                throw;
-            }
-
-            return socios;
-        }
-
-        public string ActualizarEstadoSocio(int idSocio, int estado, string? motivo)
-        {
-            string mensaje = string.Empty;
-
-            using (MySqlConnection conn = new MySqlConnection(_connectionString))
-            {
-                try
-                {
-                    conn.Open();
-
-                    using (MySqlCommand cmd = new MySqlCommand("SP_ACTUALIZAR_ESTADO_SOCIO", conn))
-                    {
-                        cmd.CommandType = CommandType.StoredProcedure;
-
-                        cmd.Parameters.AddWithValue("@p_idsocio", idSocio);
-                        cmd.Parameters.AddWithValue("@p_estado", estado);
-                        cmd.Parameters.AddWithValue("@p_motivo", motivo ?? (object)DBNull.Value);
-
-                        using (var reader = cmd.ExecuteReader())
-                        {
-                            if (reader.Read())
-                            {
-                                mensaje = reader["mensaje"].ToString();
-                            }
-                        }
-                    }
-                }
-                catch (MySqlException ex)
-                {
-                    Console.WriteLine($"Error de MySQL al actualizar estado del socio: {ex.Message}");
-                    throw;
-                }
-                finally
-                {
-                    if (conn.State == ConnectionState.Open)
-                        conn.Close();
-                }
-            }
-
-            return mensaje;
-        }
-
-        /// <summary>
-        /// Método para obtener el historial completo de socios
-        /// </summary>
-        /// <returns>Lista de socios incluyendo activos e inactivos</returns>
-        public List<SocioHistorialDTO> ObtenerHistorialSocios()
-        {
-            List<SocioHistorialDTO> socios = new List<SocioHistorialDTO>();
-
-            try
-            {
-                using (MySqlConnection conn = new MySqlConnection(_connectionString))
-                {
-                    conn.Open();
-                    using (MySqlCommand cmd = new MySqlCommand("SP_OBTENER_HISTORIAL_SOCIOS", conn))
-                    {
-                        cmd.CommandType = CommandType.StoredProcedure;
-
-                        using (var reader = cmd.ExecuteReader())
-                        {
-                            while (reader.Read())
-                            {
-                                string nombre = reader["nombre"].ToString();
-                                string apellidoPaterno = reader["apellido_paterno"].ToString();
-                                string apellidoMaterno = reader["apellido_materno"] != DBNull.Value ?
-                                    reader["apellido_materno"].ToString() : "";
-
-                                socios.Add(new SocioHistorialDTO
-                                {
-                                    IdSocio = Convert.ToInt32(reader["idsocio"]),
-                                    Rut = Convert.ToInt32(reader["rut"]),
-                                    DvRut = reader["dv_rut"].ToString(),
-                                    NombreCompleto = $"{nombre} {apellidoPaterno} {apellidoMaterno}".Trim(),
-                                    Correo = reader["correo_electronico"].ToString(),
-                                    Telefono = reader["telefono"].ToString(),
-                                    Direccion = reader["direccion"].ToString(),
-                                    FechaRegistro = Convert.ToDateTime(reader["fecha_registro"]),
-                                    FechaAprobacion = reader["fecha_aprobacion"] != DBNull.Value ?
-                                        Convert.ToDateTime(reader["fecha_aprobacion"]) : null,
-                                    Estado = Convert.ToInt32(reader["estado"]),
-                                    MotivoDesactivacion = reader["motivo_desactivacion"]?.ToString(),
-                                    FechaDesactivacion = reader["fecha_desactivacion"] != DBNull.Value ?
-                                        Convert.ToDateTime(reader["fecha_desactivacion"]) : null
-                                });
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error al obtener historial de socios: {ex.Message}");
-                throw;
-            }
-
-            return socios;
-        }
-
-        public List<SocioActivoDTO> ObtenerTodosSocios()
-        {
-            List<SocioActivoDTO> socios = new List<SocioActivoDTO>();
-
-            try
-            {
-                using (MySqlConnection conn = new MySqlConnection(_connectionString))
-                {
-                    conn.Open();
-                    using (MySqlCommand cmd = new MySqlCommand("SP_OBTENER_TODOS_SOCIOS", conn))
-                    {
-                        cmd.CommandType = CommandType.StoredProcedure;
-
-                        using (var reader = cmd.ExecuteReader())
-                        {
-                            while (reader.Read())
-                            {
-                                string nombre = reader["nombre"].ToString();
-                                string apellidoPaterno = reader["apellido_paterno"].ToString();
-                                string apellidoMaterno = reader["apellido_materno"] != DBNull.Value ?
-                                    reader["apellido_materno"].ToString() : "";
-
-                                socios.Add(new SocioActivoDTO
-                                {
-                                    IdSocio = Convert.ToInt32(reader["idsocio"]),
-                                    Rut = Convert.ToInt32(reader["rut"]),
-                                    DvRut = reader["dv_rut"].ToString(),
-                                    NombreCompleto = $"{nombre} {apellidoPaterno} {apellidoMaterno}".Trim(),
-                                    Correo = reader["correo_electronico"].ToString(),
-                                    Telefono = reader["telefono"].ToString(),
-                                    Direccion = reader["direccion"].ToString(),
-                                    FechaRegistro = Convert.ToDateTime(reader["fecha_registro"]),
-                                    FechaAprobacion = reader["fecha_aprobacion"] != DBNull.Value ?
-                                        Convert.ToDateTime(reader["fecha_aprobacion"]) : null,
-                                    Estado = Convert.ToInt32(reader["estado"]),
-                                    MotivoDesactivacion = reader["motivo_desactivacion"]?.ToString()
-                                });
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error al obtener todos los socios: {ex.Message}");
-                throw;
-            }
-
-            return socios;
-        }
-
-
+            return certificados;
+        }*/
     }
 }

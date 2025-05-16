@@ -80,9 +80,91 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "REST_VECINDAPP.Controllers.SociosController",
-    "Method": "Get",
-    "RelativePath": "api/Socios",
+    "ContainingType": "REST_VECINDAPP.Controllers.DirectivaController",
+    "Method": "AprobarCertificado",
+    "RelativePath": "api/Directiva/certificados/{solicitudId}/aprobar",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "solicitudId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "request",
+        "Type": "REST_VECINDAPP.Modelos.DTOs.AprobarCertificadoRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.String",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "REST_VECINDAPP.Controllers.DirectivaController",
+    "Method": "RechazarCertificado",
+    "RelativePath": "api/Directiva/certificados/{solicitudId}/rechazar",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "solicitudId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "request",
+        "Type": "REST_VECINDAPP.Modelos.DTOs.RechazarCertificadoRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.String",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "REST_VECINDAPP.Controllers.DirectivaController",
+    "Method": "ObtenerEstadisticas",
+    "RelativePath": "api/Directiva/estadisticas",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "EstadisticasResponse",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "REST_VECINDAPP.Controllers.DirectivaController",
+    "Method": "ListarSocios",
+    "RelativePath": "api/Directiva/socios",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -106,77 +188,41 @@
     ]
   },
   {
-    "ContainingType": "REST_VECINDAPP.Controllers.SociosController",
+    "ContainingType": "REST_VECINDAPP.Controllers.DirectivaController",
     "Method": "ActualizarEstadoSocio",
-    "RelativePath": "api/Socios/{id}/estado",
+    "RelativePath": "api/Directiva/socios/{idSocio}/estado",
     "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "id",
+        "Name": "idSocio",
         "Type": "System.Int32",
         "IsRequired": true
       },
       {
-        "Name": "datos",
+        "Name": "request",
         "Type": "ActualizarEstadoSocioDTO",
         "IsRequired": true
       }
     ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "REST_VECINDAPP.Controllers.SociosController",
-    "Method": "ObtenerSociosActivos",
-    "RelativePath": "api/Socios/activos",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "REST_VECINDAPP.Controllers.SociosController",
-    "Method": "AprobarSolicitud",
-    "RelativePath": "api/Socios/aprobar/{rut}",
-    "HttpMethod": "PUT",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
+    "ReturnTypes": [
       {
-        "Name": "rut",
-        "Type": "System.Int32",
-        "IsRequired": true
+        "Type": "System.String",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
       }
-    ],
-    "ReturnTypes": []
+    ]
   },
   {
-    "ContainingType": "REST_VECINDAPP.Controllers.SociosController",
-    "Method": "ObtenerEstadisticas",
-    "RelativePath": "api/Socios/estadisticas",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "REST_VECINDAPP.Controllers.SociosController",
-    "Method": "ObtenerHistorialSocios",
-    "RelativePath": "api/Socios/historial",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "REST_VECINDAPP.Controllers.SociosController",
-    "Method": "RechazarSolicitud",
-    "RelativePath": "api/Socios/rechazar/{rut}",
-    "HttpMethod": "PUT",
+    "ContainingType": "REST_VECINDAPP.Controllers.DirectivaController",
+    "Method": "RevocarMembresia",
+    "RelativePath": "api/Directiva/socios/{rut}/revocar",
+    "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
@@ -186,8 +232,218 @@
         "IsRequired": true
       },
       {
-        "Name": "datos",
+        "Name": "rechazo",
         "Type": "REST_VECINDAPP.Modelos.DTOs.RechazoDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.String",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "REST_VECINDAPP.Controllers.DirectivaController",
+    "Method": "ObtenerSociosActivos",
+    "RelativePath": "api/Directiva/socios/activos",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.List\u00601[[REST_VECINDAPP.Modelos.DTOs.SocioActivoDTO, REST_VECINDAPP, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "REST_VECINDAPP.Controllers.DirectivaController",
+    "Method": "ObtenerHistorialSocios",
+    "RelativePath": "api/Directiva/socios/historial",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.List\u00601[[SocioHistorialDTO, REST_VECINDAPP, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "REST_VECINDAPP.Controllers.DirectivaController",
+    "Method": "ObtenerTodosSocios",
+    "RelativePath": "api/Directiva/socios/todos",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.List\u00601[[REST_VECINDAPP.Modelos.DTOs.SocioActivoDTO, REST_VECINDAPP, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "REST_VECINDAPP.Controllers.DirectivaController",
+    "Method": "ConsultarSolicitudes",
+    "RelativePath": "api/Directiva/solicitudes",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "estadoSolicitud",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.List\u00601[[REST_VECINDAPP.Modelos.DTOs.SolicitudSocioDTO, REST_VECINDAPP, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "REST_VECINDAPP.Controllers.DirectivaController",
+    "Method": "AprobarSolicitud",
+    "RelativePath": "api/Directiva/solicitudes/{rut}/aprobar",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "rut",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.String",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "REST_VECINDAPP.Controllers.DirectivaController",
+    "Method": "RechazarSolicitud",
+    "RelativePath": "api/Directiva/solicitudes/{rut}/rechazar",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "rut",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "rechazo",
+        "Type": "REST_VECINDAPP.Modelos.DTOs.RechazoDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.String",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "REST_VECINDAPP.Controllers.DirectivaController",
+    "Method": "ConfigurarTarifaCertificado",
+    "RelativePath": "api/Directiva/tarifas/certificados/{tipoCertificadoId}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "tipoCertificadoId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "request",
+        "Type": "REST_VECINDAPP.Modelos.DTOs.ConfigurarTarifaRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.String",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "REST_VECINDAPP.Controllers.SociosController",
+    "Method": "ObtenerPerfil",
+    "RelativePath": "api/Socios/perfil",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "REST_VECINDAPP.Controllers.SociosController",
+    "Method": "SolicitarMembresia",
+    "RelativePath": "api/Socios/solicitar",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "datos",
+        "Type": "REST_VECINDAPP.Modelos.DTOs.SolicitudMembresia",
         "IsRequired": true
       }
     ],
@@ -195,24 +451,18 @@
   },
   {
     "ContainingType": "REST_VECINDAPP.Controllers.SociosController",
-    "Method": "ConsultarSolicitudes",
-    "RelativePath": "api/Socios/solicitudes",
+    "Method": "ConsultarEstadoSolicitud",
+    "RelativePath": "api/Socios/solicitud/estado",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
-    "Parameters": [
-      {
-        "Name": "estado",
-        "Type": "System.String",
-        "IsRequired": false
-      }
-    ],
+    "Parameters": [],
     "ReturnTypes": []
   },
   {
     "ContainingType": "REST_VECINDAPP.Controllers.SociosController",
-    "Method": "ObtenerTodosSocios",
-    "RelativePath": "api/Socios/todos",
+    "Method": "EsSocio",
+    "RelativePath": "api/Socios/verificar",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -260,7 +510,7 @@
       },
       {
         "Name": "datosActualizacion",
-        "Type": "REST_VECINDAPP.Controllers.UsuariosController\u002BActualizacionUsuarioDto",
+        "Type": "REST_VECINDAPP.Modelos.DTOs.ActualizacionUsuarioDTO",
         "IsRequired": true
       }
     ],
@@ -294,6 +544,22 @@
   },
   {
     "ContainingType": "REST_VECINDAPP.Controllers.UsuariosController",
+    "Method": "CambiarContrasena",
+    "RelativePath": "api/Usuarios/cambiar-contrasena",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "cambioDto",
+        "Type": "REST_VECINDAPP.Modelos.DTOs.CambioContrasenaDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "REST_VECINDAPP.Controllers.UsuariosController",
     "Method": "Registrar",
     "RelativePath": "api/Usuarios/registrar",
     "HttpMethod": "POST",
@@ -303,43 +569,6 @@
       {
         "Name": "usuario",
         "Type": "REST_VECINDAPP.Modelos.Usuario",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "REST_VECINDAPP.Controllers.UsuariosController",
-    "Method": "AsignarRol",
-    "RelativePath": "api/Usuarios/roles/{rut}",
-    "HttpMethod": "PUT",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "rut",
-        "Type": "System.Int32",
-        "IsRequired": true
-      },
-      {
-        "Name": "rolDto",
-        "Type": "REST_VECINDAPP.Controllers.UsuariosController\u002BRolDto",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "REST_VECINDAPP.Controllers.UsuariosController",
-    "Method": "EnviarSolicitudSocio",
-    "RelativePath": "api/Usuarios/socios/solicitud",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "solicitud",
-        "Type": "REST_VECINDAPP.Modelos.DTOs.SolicitudMembresia",
         "IsRequired": true
       }
     ],

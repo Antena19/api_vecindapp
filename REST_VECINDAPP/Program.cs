@@ -5,6 +5,8 @@ using System.Text;
 using Microsoft.AspNetCore.Cors;
 using REST_VECINDAPP.Servicios;
 using REST_VECINDAPP.CapaNegocios;
+using REST_VECINDAPP.Servicios.Archivos;
+using Microsoft.AspNetCore.Http.Features;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,13 +31,13 @@ builder.Services.AddSwaggerGen(c =>
     {
         Title = "VecindApp API",
         Version = "v1",
-        Description = "API para la aplicación de gestión de juntas de vecinos"
+        Description = "API para la aplicaciï¿½n de gestiï¿½n de juntas de vecinos"
     });
 
     // Configurar Swagger para usar JWT
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
-        Description = "JWT Authorization header usando el esquema Bearer. Ingresa tu token JWT aquí.",
+        Description = "JWT Authorization header usando el esquema Bearer. Ingresa tu token JWT aquï¿½.",
         Name = "Authorization",
         In = ParameterLocation.Header,
         Type = SecuritySchemeType.Http,
@@ -60,9 +62,10 @@ builder.Services.AddSwaggerGen(c =>
 
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<cn_Usuarios>();
+builder.Services.AddScoped<cn_Directiva>();
 
-// Configurar la autenticación con JWT
-var key = Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"] ?? throw new InvalidOperationException("Jwt:Key no está configurado"));
+// Configurar la autenticaciï¿½n con JWT
+var key = Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"] ?? throw new InvalidOperationException("Jwt:Key no estï¿½ configurado"));
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -82,11 +85,22 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddAuthorization();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<REST_VECINDAPP.Seguridad.VerificadorRoles>();
+// Agregar el servicio de almacenamiento de archivos
+builder.Services.AddScoped<FileStorageService>();
+// Configurar el tamaï¿½o mï¿½ximo de archivos (opcional)
+builder.Services.Configure<FormOptions>(options =>
+{
+    options.MultipartBodyLengthLimit = 10 * 1024 * 1024; // 10MB
+});
 
-// Construir la aplicación
+
+
+
+
+// Construir la aplicaciï¿½n
 var app = builder.Build();
 
-// Configure the HTTP request pipeline - DESPUÉS de builder.Build()
+// Configure the HTTP request pipeline - DESPUï¿½S de builder.Build()
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -94,13 +108,16 @@ if (app.Environment.IsDevelopment())
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "VecindApp API v1");
         c.DocExpansion(Swashbuckle.AspNetCore.SwaggerUI.DocExpansion.None);
-        c.DefaultModelsExpandDepth(-1); // Oculta la sección de modelos por defecto
+        c.DefaultModelsExpandDepth(-1); // Oculta la secciï¿½n de modelos por defecto
     });
 }
 app.UseCors("AllowSpecificOrigin");
 app.UseHttpsRedirection();
-app.UseAuthentication();  // Primero autenticación
-app.UseAuthorization();   // Luego autorización
+app.UseAuthentication();  // Primero autenticaciï¿½n
+app.UseAuthorization();   // Luego autorizaciï¿½n
 app.MapControllers();
+
+// Agregar soporte para archivos estï¿½ticos
+app.UseStaticFiles();
 
 app.Run();

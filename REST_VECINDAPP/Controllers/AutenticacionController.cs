@@ -105,12 +105,13 @@ namespace REST_VECINDAPP.Controllers
             var (datosExito, datosUsuario, _) = cnUsuarios.ObtenerDatosUsuario(rut);
 
             // Definir el rol predeterminado como "vecino" si no se puede obtener el tipo
-            string tipoUsuario = "vecino";
+            string tipoUsuario = "Vecino";
 
             // Si tenemos datos del usuario, usamos su tipo real
             if (datosExito && datosUsuario != null && !string.IsNullOrEmpty(datosUsuario.tipo_usuario))
             {
-                tipoUsuario = datosUsuario.tipo_usuario;
+                // Normaliza la primera letra en mayúscula
+                tipoUsuario = char.ToUpper(datosUsuario.tipo_usuario[0]) + datosUsuario.tipo_usuario.Substring(1).ToLower();
             }
 
             // Crear token JWT
